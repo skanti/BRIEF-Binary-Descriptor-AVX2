@@ -2,7 +2,6 @@
 #define BRIEF_H
 
 #include <vector>
-#include "AlignedAllocator.h"
 #include "Types.h"
 #include <cassert>
 
