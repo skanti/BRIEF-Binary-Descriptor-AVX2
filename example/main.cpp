@@ -38,32 +38,18 @@ int main() {
 
     int n_dim_vec = N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING;
     int n_features = 500;
-    int n_features_ti = n_features / N_THREADS;
     for (int i = 0; i < 1; i++) {
         cv::Mat image = cv::imread(dir + img_basenames[i], CV_LOAD_IMAGE_X);
         std::vector<int> x(n_features), y(n_features);
         std::vector<float> angle(n_features);
         create_synthetic_data(x, y, angle, n_features);
         BRIEF brief;
-        std::vector<Matrix<haming_type> *> bd(N_THREADS);
-        for (int t = 0; t < N_THREADS; t++) {
-            bd[t] = new Matrix<haming_type>(n_dim_vec, n_features_ti);
-        }
+        Matrix<haming_type> bd(n_dim_vec, n_features);
         Timer::start();
-#pragma omp parallel for
-        for (int t = 0; t < N_THREADS; t++) {
-            brief.rbrief(image.data, HEIGHT_IMAGE, WIDTH_IMAGE, N_CHANNELS, STRIDE_IMAGE,
-                         x.data() + t * n_features_ti, y.data() + t * n_features_ti, angle.data() + t * n_features_ti,
-                         n_features_ti, bd[t]->memptr(), bd[t]->n_rows);
-        }
+        brief.rbrief(image.data, HEIGHT_IMAGE, WIDTH_IMAGE, N_CHANNELS, STRIDE_IMAGE,
+                     x.data(), y.data(), angle.data(), n_features, bd.memptr(), bd.n_rows);
         Timer::stop();
         std::cout << "timing (ms): " << Timer::get_timing_in_ms() << std::endl;
-
-        // -> Freeing thread owned memory
-        for (int i = 0; i < N_THREADS; i++) {
-            delete bd[i];
-        }
-        // <-
     }
 
 }
