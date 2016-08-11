@@ -5,7 +5,15 @@
 #include <cassert>
 
 #ifndef N_DIM_BINARYDESCRIPTOR
-#error N_DIM_BINARYDESCRIPTOR not defined!
+#define N_DIM_BINARYDESCRIPTOR 256
+#else
+assert(N_DIM_BINARYDESCRIPTOR == 256)
+#endif
+
+#ifndef SIZE_BITS_HAMING
+#define SIZE_BITS_HAMING 64
+#else
+assert(SIZE_BITS_HAMING == 64)
 #endif
 
 class BRIEF {
@@ -17,4 +25,5 @@ public:
     static int diag_length_pattern; // <- maximal range of pattern box: 25/2 = 12, sqrt(12*12 + 12*12) = 17
     static int gaussian_bit_pattern_31[256 * 4];
 };
+
 #endif
