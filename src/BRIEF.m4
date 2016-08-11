@@ -31,12 +31,12 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             unsigned char b[256] __attribute__((aligned(32)));
             float x_af, x_bf, y_af, y_bf;
             int x_a, x_b, y_a, y_b;
-            forloop(l,0,255,
-            a[l] = GET_VALUE(4*`l',x_af,y_af,x_a,y_a); b[l] = GET_VALUE(`l'*4 + 2,x_bf,y_bf,x_b,y_b);
-            )
-            int32_t f[8]  __attribute__((aligned(32)));
+            for (int i = 0; i < 256; i++) {
+                a[i] = GET_VALUE(4*i,x_af,y_af,x_a,y_a); b[i] = GET_VALUE(i*4 + 2,x_bf,y_bf,x_b,y_b);
+            }
+            int32_t f[8]  __attribute__((aligned(16)));
             forloop(l,0,7,
-            f[l] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*l)),_mm256_load_si256((__m256i const*) (b+32*l))));
+            f[l] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*l)),_mm256_load_si256((__m256i const*) (b+32*l))));
             )
             __m256i favx = _mm256_load_si256((__m256i const*)(f));
             _mm256_store_si256((__m256i*)(bd + j*n_rows_bd), favx);
