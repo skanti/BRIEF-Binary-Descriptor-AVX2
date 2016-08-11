@@ -10,13 +10,6 @@
 
 
 
-#define GET_VALUE(k, x_f,y_f, x_i, y_i) \
-                ((x_f) = gaussian_bit_pattern_31[k]*cos_angle - gaussian_bit_pattern_31[k+1]*sin_angle, \
-                (y_f) = gaussian_bit_pattern_31[k]*sin_angle + gaussian_bit_pattern_31[k+1]*cos_angle, \
-                (x_i) = _mm_cvtss_si32(_mm_set_ss( (x_f) )), \
-                (y_i) = _mm_cvtss_si32(_mm_set_ss( (y_f) )), \
-                *(image_src_center + y_i*stride_image + x_i*n_channels))
-
 void
 BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels,
                 const int stride_image, const int *x, const int *y, const float *angle, const int n_features, int64_t *bd,
@@ -30,12 +23,19 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             // N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING = 4
             unsigned char a[256] __attribute__((aligned(32)));
             unsigned char b[256] __attribute__((aligned(32)));
-            float x_af, x_bf, y_af, y_bf;
-            int x_a, x_b, y_a, y_b;
             for (int i = 0; i < 256; i++) {
-                a[i] = GET_VALUE(4*i,x_af,y_af,x_a,y_a); b[i] = GET_VALUE(i*4 + 2,x_bf,y_bf,x_b,y_b);
+                float x_f = gaussian_bit_pattern_31[i*4]*cos_angle - gaussian_bit_pattern_31[i*4+1]*sin_angle;
+                float y_f = gaussian_bit_pattern_31[i*4]*sin_angle + gaussian_bit_pattern_31[i*4+1]*cos_angle;
+                int x_i = _mm_cvtss_si32(_mm_set_ss(x_f));
+                int y_i = _mm_cvtss_si32(_mm_set_ss(y_f));
+                a[i]= *(image_src_center + y_i*stride_image + x_i*n_channels);
+                x_f = gaussian_bit_pattern_31[i*4+2]*cos_angle - gaussian_bit_pattern_31[i*4+3]*sin_angle;
+                y_f = gaussian_bit_pattern_31[i*4+2]*sin_angle + gaussian_bit_pattern_31[i*4+3]*cos_angle;
+                x_i = _mm_cvtss_si32(_mm_set_ss(x_f));
+                y_i = _mm_cvtss_si32(_mm_set_ss(y_f));
+                b[i]= *(image_src_center + y_i*stride_image + x_i*n_channels);
             }
-            int32_t f[8]  __attribute__((aligned(16)));
+            int32_t f[8]  __attribute__((aligned(32)));
             f[0] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*0)),_mm256_load_si256((__m256i const*) (b+32*0))));
             f[1] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*1)),_mm256_load_si256((__m256i const*) (b+32*1))));
             f[2] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*2)),_mm256_load_si256((__m256i const*) (b+32*2))));
