@@ -290,7 +290,7 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             a[254] = GET_VALUE(4*254,x_af,y_af,x_a,y_a); b[254] = GET_VALUE(254*4 + 2,x_bf,y_bf,x_b,y_b);
             a[255] = GET_VALUE(4*255,x_af,y_af,x_a,y_a); b[255] = GET_VALUE(255*4 + 2,x_bf,y_bf,x_b,y_b);
             
-            int32_t f[16];
+            int32_t f[16]  __attribute__((aligned(32)));
             f[0] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*0)),_mm_load_si128((__m128i const*) (b+16*0))));
             f[1] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*1)),_mm_load_si128((__m128i const*) (b+16*1))));
             f[2] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*2)),_mm_load_si128((__m128i const*) (b+16*2))));
@@ -310,7 +310,11 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             
             //int32_t g[16] __attribute__((aligned(32)));
 
-            bd[j*n_rows_bd] = ((int64_t)(f[0])) + ((int64_t)(f[1]) << 1) + ((int64_t)(f[2])<<2) + ((int64_t)(f[3])<<3);
+            bd[j*n_rows_bd + 0] = ((int64_t)(f[0*4])) + ((int64_t)(f[0*4+1]) << 16) + ((int64_t)(f[0*4+2])<< 32) + ((int64_t)(f[0*4+3])<< 48);
+            bd[j*n_rows_bd + 1] = ((int64_t)(f[1*4])) + ((int64_t)(f[1*4+1]) << 16) + ((int64_t)(f[1*4+2])<< 32) + ((int64_t)(f[1*4+3])<< 48);
+            bd[j*n_rows_bd + 2] = ((int64_t)(f[2*4])) + ((int64_t)(f[2*4+1]) << 16) + ((int64_t)(f[2*4+2])<< 32) + ((int64_t)(f[2*4+3])<< 48);
+            bd[j*n_rows_bd + 3] = ((int64_t)(f[3*4])) + ((int64_t)(f[3*4+1]) << 16) + ((int64_t)(f[3*4+2])<< 32) + ((int64_t)(f[3*4+3])<< 48);
+            
         }
     }
 }
