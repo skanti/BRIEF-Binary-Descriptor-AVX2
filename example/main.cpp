@@ -33,23 +33,28 @@ void create_synthetic_data(std::vector<int> &x, std::vector<int> &y, std::vector
 
 int main() {
     std::string dir = "/Users/amon/grive/development/BRIEF/picdump";
-    std::vector<std::string> img_basenames = {"/apple.jpg", "/astronaut.jpg", "/bike.jpg", "/bmw.jpg"};
+    std::vector<std::string> img_basenames = {"/apple.jpg", "/astronaut.jpg", "/bike.jpg", "/bmw.jpg",
+                                              "/cake.jpg", "/cherry.jpg", "/dreamliner.jpg", "/macbook.jpg",
+                                              "/orange.jpg"};
     int n = img_basenames.size();
 
     int n_dim_vec = N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING;
     int n_features = 500;
-    for (int i = 0; i < 1; i++) {
+    std::vector<int> x(n_features), y(n_features);
+    std::vector<float> angle(n_features);
+    create_synthetic_data(x, y, angle, n_features);
+    BRIEF brief;
+    Matrix<haming_type> bd(n_dim_vec, n_features);
+    double t_total = 0;
+    for (int i = 0; i < n; i++) {
         cv::Mat image = cv::imread(dir + img_basenames[i], CV_LOAD_IMAGE_X);
-        std::vector<int> x(n_features), y(n_features);
-        std::vector<float> angle(n_features);
-        create_synthetic_data(x, y, angle, n_features);
-        BRIEF brief;
-        Matrix<haming_type> bd(n_dim_vec, n_features);
         Timer::start();
         brief.rbrief(image.data, HEIGHT_IMAGE, WIDTH_IMAGE, N_CHANNELS, STRIDE_IMAGE,
                      x.data(), y.data(), angle.data(), n_features, bd.memptr(), bd.n_rows);
         Timer::stop();
-        std::cout << "timing (ms): " << Timer::get_timing_in_ms() << std::endl;
+        double t = Timer::get_timing_in_ms();
+        t_total += t;
+        std::cout << "timing (ms): " << t << std::endl;
     }
-
+    std::cout << "timing average(ms): " << t_total / n << std::endl;
 }

@@ -31,7 +31,7 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             unsigned char *image_src_center = image_src + y[j] * stride_image + x[j] * n_channels;
             // N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING = 4
             for (int i = 0; i < N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING; i++) {
-                int i_pattern = i * SIZE_BITS_HAMING;
+                int i_pattern = i * SIZE_BITS_HAMING*4;
                 int64_t t0, t1, val;
                 t0 = GET_VALUE(i_pattern); t1 = GET_VALUE(i_pattern + 2);
                 val = t0 < t1;
