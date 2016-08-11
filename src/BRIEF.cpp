@@ -32,75 +32,75 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             // N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING = 4
             for (int i = 0; i < N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING; i++) {
                 int i_pat = i * 4 *  SIZE_BITS_HAMING;
-                unsigned char a_0 , a_1, a_2, a_3, a_4, a_5, a_6, a_7;
-                unsigned char b_0 , b_1, b_2, b_3, b_4, b_5, b_6, b_7;
-                unsigned char f_0 ,f_1=0,f_2=0,f_3=0,f_4=0,f_5=0,f_6=0,f_7=0;
-                a_0 =GET_VALUE(i_pat + 1*4); b_0 =GET_VALUE(i_pat + 1*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
-                a_0 =GET_VALUE(i_pat + 2*4); b_0 =GET_VALUE(i_pat + 2*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
-                a_0 =GET_VALUE(i_pat + 3*4); b_0 =GET_VALUE(i_pat + 3*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
-                a_0 =GET_VALUE(i_pat + 4*4); b_0 =GET_VALUE(i_pat + 4*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
-                a_0 =GET_VALUE(i_pat + 5*4); b_0 =GET_VALUE(i_pat + 5*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
-                a_0 =GET_VALUE(i_pat + 6*4); b_0 =GET_VALUE(i_pat + 6*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
-                a_0 =GET_VALUE(i_pat + 7*4); b_0 =GET_VALUE(i_pat + 7*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
+                unsigned char a[8] __attribute__((aligned(16)));
+                unsigned char b[8] __attribute__((aligned(16)));
+                unsigned char f[8] __attribute__((aligned(16)));
+                a[0] =GET_VALUE(i_pat + 1*4); b[0] =GET_VALUE(i_pat + 1*4 + 2); f[0] |= (unsigned char)(a[0] < b[0]) << 0;
+                a[0] =GET_VALUE(i_pat + 2*4); b[0] =GET_VALUE(i_pat + 2*4 + 2); f[0] |= (unsigned char)(a[0] < b[0]) << 0;
+                a[0] =GET_VALUE(i_pat + 3*4); b[0] =GET_VALUE(i_pat + 3*4 + 2); f[0] |= (unsigned char)(a[0] < b[0]) << 0;
+                a[0] =GET_VALUE(i_pat + 4*4); b[0] =GET_VALUE(i_pat + 4*4 + 2); f[0] |= (unsigned char)(a[0] < b[0]) << 0;
+                a[0] =GET_VALUE(i_pat + 5*4); b[0] =GET_VALUE(i_pat + 5*4 + 2); f[0] |= (unsigned char)(a[0] < b[0]) << 0;
+                a[0] =GET_VALUE(i_pat + 6*4); b[0] =GET_VALUE(i_pat + 6*4 + 2); f[0] |= (unsigned char)(a[0] < b[0]) << 0;
+                a[0] =GET_VALUE(i_pat + 7*4); b[0] =GET_VALUE(i_pat + 7*4 + 2); f[0] |= (unsigned char)(a[0] < b[0]) << 0;
                 
-                a_1 =GET_VALUE(i_pat + 1*4); b_1 =GET_VALUE(i_pat + 1*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
-                a_1 =GET_VALUE(i_pat + 2*4); b_1 =GET_VALUE(i_pat + 2*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
-                a_1 =GET_VALUE(i_pat + 3*4); b_1 =GET_VALUE(i_pat + 3*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
-                a_1 =GET_VALUE(i_pat + 4*4); b_1 =GET_VALUE(i_pat + 4*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
-                a_1 =GET_VALUE(i_pat + 5*4); b_1 =GET_VALUE(i_pat + 5*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
-                a_1 =GET_VALUE(i_pat + 6*4); b_1 =GET_VALUE(i_pat + 6*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
-                a_1 =GET_VALUE(i_pat + 7*4); b_1 =GET_VALUE(i_pat + 7*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
+                a[1] =GET_VALUE(i_pat + 1*4); b[1] =GET_VALUE(i_pat + 1*4 + 2); f[1] |= (unsigned char)(a[1] < b[1]) << 1;
+                a[1] =GET_VALUE(i_pat + 2*4); b[1] =GET_VALUE(i_pat + 2*4 + 2); f[1] |= (unsigned char)(a[1] < b[1]) << 1;
+                a[1] =GET_VALUE(i_pat + 3*4); b[1] =GET_VALUE(i_pat + 3*4 + 2); f[1] |= (unsigned char)(a[1] < b[1]) << 1;
+                a[1] =GET_VALUE(i_pat + 4*4); b[1] =GET_VALUE(i_pat + 4*4 + 2); f[1] |= (unsigned char)(a[1] < b[1]) << 1;
+                a[1] =GET_VALUE(i_pat + 5*4); b[1] =GET_VALUE(i_pat + 5*4 + 2); f[1] |= (unsigned char)(a[1] < b[1]) << 1;
+                a[1] =GET_VALUE(i_pat + 6*4); b[1] =GET_VALUE(i_pat + 6*4 + 2); f[1] |= (unsigned char)(a[1] < b[1]) << 1;
+                a[1] =GET_VALUE(i_pat + 7*4); b[1] =GET_VALUE(i_pat + 7*4 + 2); f[1] |= (unsigned char)(a[1] < b[1]) << 1;
                 
-                a_2 =GET_VALUE(i_pat + 1*4); b_2 =GET_VALUE(i_pat + 1*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
-                a_2 =GET_VALUE(i_pat + 2*4); b_2 =GET_VALUE(i_pat + 2*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
-                a_2 =GET_VALUE(i_pat + 3*4); b_2 =GET_VALUE(i_pat + 3*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
-                a_2 =GET_VALUE(i_pat + 4*4); b_2 =GET_VALUE(i_pat + 4*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
-                a_2 =GET_VALUE(i_pat + 5*4); b_2 =GET_VALUE(i_pat + 5*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
-                a_2 =GET_VALUE(i_pat + 6*4); b_2 =GET_VALUE(i_pat + 6*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
-                a_2 =GET_VALUE(i_pat + 7*4); b_2 =GET_VALUE(i_pat + 7*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
+                a[2] =GET_VALUE(i_pat + 1*4); b[2] =GET_VALUE(i_pat + 1*4 + 2); f[2] |= (unsigned char)(a[2] < b[2]) << 2;
+                a[2] =GET_VALUE(i_pat + 2*4); b[2] =GET_VALUE(i_pat + 2*4 + 2); f[2] |= (unsigned char)(a[2] < b[2]) << 2;
+                a[2] =GET_VALUE(i_pat + 3*4); b[2] =GET_VALUE(i_pat + 3*4 + 2); f[2] |= (unsigned char)(a[2] < b[2]) << 2;
+                a[2] =GET_VALUE(i_pat + 4*4); b[2] =GET_VALUE(i_pat + 4*4 + 2); f[2] |= (unsigned char)(a[2] < b[2]) << 2;
+                a[2] =GET_VALUE(i_pat + 5*4); b[2] =GET_VALUE(i_pat + 5*4 + 2); f[2] |= (unsigned char)(a[2] < b[2]) << 2;
+                a[2] =GET_VALUE(i_pat + 6*4); b[2] =GET_VALUE(i_pat + 6*4 + 2); f[2] |= (unsigned char)(a[2] < b[2]) << 2;
+                a[2] =GET_VALUE(i_pat + 7*4); b[2] =GET_VALUE(i_pat + 7*4 + 2); f[2] |= (unsigned char)(a[2] < b[2]) << 2;
                 
-                a_3 =GET_VALUE(i_pat + 1*4); b_3 =GET_VALUE(i_pat + 1*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
-                a_3 =GET_VALUE(i_pat + 2*4); b_3 =GET_VALUE(i_pat + 2*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
-                a_3 =GET_VALUE(i_pat + 3*4); b_3 =GET_VALUE(i_pat + 3*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
-                a_3 =GET_VALUE(i_pat + 4*4); b_3 =GET_VALUE(i_pat + 4*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
-                a_3 =GET_VALUE(i_pat + 5*4); b_3 =GET_VALUE(i_pat + 5*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
-                a_3 =GET_VALUE(i_pat + 6*4); b_3 =GET_VALUE(i_pat + 6*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
-                a_3 =GET_VALUE(i_pat + 7*4); b_3 =GET_VALUE(i_pat + 7*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
+                a[3] =GET_VALUE(i_pat + 1*4); b[3] =GET_VALUE(i_pat + 1*4 + 2); f[3] |= (unsigned char)(a[3] < b[3]) << 3;
+                a[3] =GET_VALUE(i_pat + 2*4); b[3] =GET_VALUE(i_pat + 2*4 + 2); f[3] |= (unsigned char)(a[3] < b[3]) << 3;
+                a[3] =GET_VALUE(i_pat + 3*4); b[3] =GET_VALUE(i_pat + 3*4 + 2); f[3] |= (unsigned char)(a[3] < b[3]) << 3;
+                a[3] =GET_VALUE(i_pat + 4*4); b[3] =GET_VALUE(i_pat + 4*4 + 2); f[3] |= (unsigned char)(a[3] < b[3]) << 3;
+                a[3] =GET_VALUE(i_pat + 5*4); b[3] =GET_VALUE(i_pat + 5*4 + 2); f[3] |= (unsigned char)(a[3] < b[3]) << 3;
+                a[3] =GET_VALUE(i_pat + 6*4); b[3] =GET_VALUE(i_pat + 6*4 + 2); f[3] |= (unsigned char)(a[3] < b[3]) << 3;
+                a[3] =GET_VALUE(i_pat + 7*4); b[3] =GET_VALUE(i_pat + 7*4 + 2); f[3] |= (unsigned char)(a[3] < b[3]) << 3;
                 
-                a_4 =GET_VALUE(i_pat + 1*4); b_4 =GET_VALUE(i_pat + 1*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
-                a_4 =GET_VALUE(i_pat + 2*4); b_4 =GET_VALUE(i_pat + 2*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
-                a_4 =GET_VALUE(i_pat + 3*4); b_4 =GET_VALUE(i_pat + 3*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
-                a_4 =GET_VALUE(i_pat + 4*4); b_4 =GET_VALUE(i_pat + 4*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
-                a_4 =GET_VALUE(i_pat + 5*4); b_4 =GET_VALUE(i_pat + 5*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
-                a_4 =GET_VALUE(i_pat + 6*4); b_4 =GET_VALUE(i_pat + 6*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
-                a_4 =GET_VALUE(i_pat + 7*4); b_4 =GET_VALUE(i_pat + 7*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
+                a[4] =GET_VALUE(i_pat + 1*4); b[4] =GET_VALUE(i_pat + 1*4 + 2); f[4] |= (unsigned char)(a[4] < b[4]) << 4;
+                a[4] =GET_VALUE(i_pat + 2*4); b[4] =GET_VALUE(i_pat + 2*4 + 2); f[4] |= (unsigned char)(a[4] < b[4]) << 4;
+                a[4] =GET_VALUE(i_pat + 3*4); b[4] =GET_VALUE(i_pat + 3*4 + 2); f[4] |= (unsigned char)(a[4] < b[4]) << 4;
+                a[4] =GET_VALUE(i_pat + 4*4); b[4] =GET_VALUE(i_pat + 4*4 + 2); f[4] |= (unsigned char)(a[4] < b[4]) << 4;
+                a[4] =GET_VALUE(i_pat + 5*4); b[4] =GET_VALUE(i_pat + 5*4 + 2); f[4] |= (unsigned char)(a[4] < b[4]) << 4;
+                a[4] =GET_VALUE(i_pat + 6*4); b[4] =GET_VALUE(i_pat + 6*4 + 2); f[4] |= (unsigned char)(a[4] < b[4]) << 4;
+                a[4] =GET_VALUE(i_pat + 7*4); b[4] =GET_VALUE(i_pat + 7*4 + 2); f[4] |= (unsigned char)(a[4] < b[4]) << 4;
                 
-                a_5 =GET_VALUE(i_pat + 1*4); b_5 =GET_VALUE(i_pat + 1*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
-                a_5 =GET_VALUE(i_pat + 2*4); b_5 =GET_VALUE(i_pat + 2*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
-                a_5 =GET_VALUE(i_pat + 3*4); b_5 =GET_VALUE(i_pat + 3*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
-                a_5 =GET_VALUE(i_pat + 4*4); b_5 =GET_VALUE(i_pat + 4*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
-                a_5 =GET_VALUE(i_pat + 5*4); b_5 =GET_VALUE(i_pat + 5*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
-                a_5 =GET_VALUE(i_pat + 6*4); b_5 =GET_VALUE(i_pat + 6*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
-                a_5 =GET_VALUE(i_pat + 7*4); b_5 =GET_VALUE(i_pat + 7*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
+                a[5] =GET_VALUE(i_pat + 1*4); b[5] =GET_VALUE(i_pat + 1*4 + 2); f[5] |= (unsigned char)(a[5] < b[5]) << 5;
+                a[5] =GET_VALUE(i_pat + 2*4); b[5] =GET_VALUE(i_pat + 2*4 + 2); f[5] |= (unsigned char)(a[5] < b[5]) << 5;
+                a[5] =GET_VALUE(i_pat + 3*4); b[5] =GET_VALUE(i_pat + 3*4 + 2); f[5] |= (unsigned char)(a[5] < b[5]) << 5;
+                a[5] =GET_VALUE(i_pat + 4*4); b[5] =GET_VALUE(i_pat + 4*4 + 2); f[5] |= (unsigned char)(a[5] < b[5]) << 5;
+                a[5] =GET_VALUE(i_pat + 5*4); b[5] =GET_VALUE(i_pat + 5*4 + 2); f[5] |= (unsigned char)(a[5] < b[5]) << 5;
+                a[5] =GET_VALUE(i_pat + 6*4); b[5] =GET_VALUE(i_pat + 6*4 + 2); f[5] |= (unsigned char)(a[5] < b[5]) << 5;
+                a[5] =GET_VALUE(i_pat + 7*4); b[5] =GET_VALUE(i_pat + 7*4 + 2); f[5] |= (unsigned char)(a[5] < b[5]) << 5;
                 
-                a_6 =GET_VALUE(i_pat + 1*4); b_6 =GET_VALUE(i_pat + 1*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
-                a_6 =GET_VALUE(i_pat + 2*4); b_6 =GET_VALUE(i_pat + 2*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
-                a_6 =GET_VALUE(i_pat + 3*4); b_6 =GET_VALUE(i_pat + 3*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
-                a_6 =GET_VALUE(i_pat + 4*4); b_6 =GET_VALUE(i_pat + 4*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
-                a_6 =GET_VALUE(i_pat + 5*4); b_6 =GET_VALUE(i_pat + 5*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
-                a_6 =GET_VALUE(i_pat + 6*4); b_6 =GET_VALUE(i_pat + 6*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
-                a_6 =GET_VALUE(i_pat + 7*4); b_6 =GET_VALUE(i_pat + 7*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
+                a[6] =GET_VALUE(i_pat + 1*4); b[6] =GET_VALUE(i_pat + 1*4 + 2); f[6] |= (unsigned char)(a[6] < b[6]) << 6;
+                a[6] =GET_VALUE(i_pat + 2*4); b[6] =GET_VALUE(i_pat + 2*4 + 2); f[6] |= (unsigned char)(a[6] < b[6]) << 6;
+                a[6] =GET_VALUE(i_pat + 3*4); b[6] =GET_VALUE(i_pat + 3*4 + 2); f[6] |= (unsigned char)(a[6] < b[6]) << 6;
+                a[6] =GET_VALUE(i_pat + 4*4); b[6] =GET_VALUE(i_pat + 4*4 + 2); f[6] |= (unsigned char)(a[6] < b[6]) << 6;
+                a[6] =GET_VALUE(i_pat + 5*4); b[6] =GET_VALUE(i_pat + 5*4 + 2); f[6] |= (unsigned char)(a[6] < b[6]) << 6;
+                a[6] =GET_VALUE(i_pat + 6*4); b[6] =GET_VALUE(i_pat + 6*4 + 2); f[6] |= (unsigned char)(a[6] < b[6]) << 6;
+                a[6] =GET_VALUE(i_pat + 7*4); b[6] =GET_VALUE(i_pat + 7*4 + 2); f[6] |= (unsigned char)(a[6] < b[6]) << 6;
                 
-                a_7 =GET_VALUE(i_pat + 1*4); b_7 =GET_VALUE(i_pat + 1*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
-                a_7 =GET_VALUE(i_pat + 2*4); b_7 =GET_VALUE(i_pat + 2*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
-                a_7 =GET_VALUE(i_pat + 3*4); b_7 =GET_VALUE(i_pat + 3*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
-                a_7 =GET_VALUE(i_pat + 4*4); b_7 =GET_VALUE(i_pat + 4*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
-                a_7 =GET_VALUE(i_pat + 5*4); b_7 =GET_VALUE(i_pat + 5*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
-                a_7 =GET_VALUE(i_pat + 6*4); b_7 =GET_VALUE(i_pat + 6*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
-                a_7 =GET_VALUE(i_pat + 7*4); b_7 =GET_VALUE(i_pat + 7*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
+                a[7] =GET_VALUE(i_pat + 1*4); b[7] =GET_VALUE(i_pat + 1*4 + 2); f[7] |= (unsigned char)(a[7] < b[7]) << 7;
+                a[7] =GET_VALUE(i_pat + 2*4); b[7] =GET_VALUE(i_pat + 2*4 + 2); f[7] |= (unsigned char)(a[7] < b[7]) << 7;
+                a[7] =GET_VALUE(i_pat + 3*4); b[7] =GET_VALUE(i_pat + 3*4 + 2); f[7] |= (unsigned char)(a[7] < b[7]) << 7;
+                a[7] =GET_VALUE(i_pat + 4*4); b[7] =GET_VALUE(i_pat + 4*4 + 2); f[7] |= (unsigned char)(a[7] < b[7]) << 7;
+                a[7] =GET_VALUE(i_pat + 5*4); b[7] =GET_VALUE(i_pat + 5*4 + 2); f[7] |= (unsigned char)(a[7] < b[7]) << 7;
+                a[7] =GET_VALUE(i_pat + 6*4); b[7] =GET_VALUE(i_pat + 6*4 + 2); f[7] |= (unsigned char)(a[7] < b[7]) << 7;
+                a[7] =GET_VALUE(i_pat + 7*4); b[7] =GET_VALUE(i_pat + 7*4 + 2); f[7] |= (unsigned char)(a[7] < b[7]) << 7;
                 
                 
-                bd[j*n_rows_bd + i] = f_0 | ((int64_t)(f_1)<<1)| ((int64_t)(f_2)<<2)| ((int64_t)(f_3)<<3)| ((int64_t)(f_4)<<4)| ((int64_t)(f_5)<<5)| ((int64_t)(f_6)<<6)| ((int64_t)(f_7)<<7);
+                bd[j*n_rows_bd + i] = f[0] + ((int64_t)(f[1])<<1)+ ((int64_t)(f[2])<<2)+ ((int64_t)(f[3])<<3)+ ((int64_t)(f[4])<<4)+ ((int64_t)(f[5])<<5)+ ((int64_t)(f[6])<<6)+ ((int64_t)(f[7])<<7);
             }
         }
     }

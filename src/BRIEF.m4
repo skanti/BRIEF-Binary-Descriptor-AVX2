@@ -31,15 +31,15 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             // `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING' = eval( N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING)
             for (int i = 0; i < `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING'; i++) {
                 int i_pat = i * 4 *  `SIZE_BITS_HAMING';
-                unsigned char a_0 forloop(k,1,7,`, '`m4_var(a,k)');
-                unsigned char b_0 forloop(k,1,7,`,' `m4_var(b,k)');
-                unsigned char f_0 forloop(k,1,7,`,'`m4_var(f,k)'=0);
+                unsigned char a[8] __attribute__((aligned(16)));
+                unsigned char b[8] __attribute__((aligned(16)));
+                unsigned char f[8] __attribute__((aligned(16)));
                 forloop(k,0,7,
                 `forloop(l,1,eval(SIZE_BITS_HAMING/8-1),
-                `m4_var(a,k)' =GET_VALUE(i_pat + `l'*4); `m4_var(b,k)' =GET_VALUE(i_pat + `l'*4 + 2); `m4_var(f,k)' |= (unsigned char)((`m4_var(a,k)' < `m4_var(b,k)')) << `k';
+                a[k] =GET_VALUE(i_pat + `l'*4); b[k] =GET_VALUE(i_pat + `l'*4 + 2); f[k] |= (unsigned char)(a[k] < b[k]) << `k';
                 )'
                 )
-                bd[j*n_rows_bd + i] = f_0 forloop(k,1,7,| ((int64_t)(`m4_var(f,k)')<<k));
+                bd[j*n_rows_bd + i] = f[0] forloop(k,1,7,+ ((int64_t)(f[k])<<k));
             }
         }
     }
