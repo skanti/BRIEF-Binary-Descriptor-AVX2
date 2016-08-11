@@ -35,8 +35,7 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
                 t0 = GET_VALUE(i_pattern); t1 = GET_VALUE(i_pattern + 2);
                 val = t0 < t1;
                 forloop(k,1,eval(SIZE_BITS_HAMING-1),
-                i_pattern += 4;
-                t0 = GET_VALUE(i_pattern); t1 = GET_VALUE(i_pattern + 2);
+                t0 = GET_VALUE(i_pattern + `k'*4 ); t1 = GET_VALUE(i_pattern + `k'*4 + 2);
                 val |= ( intx_t ) (t0 < t1) << `k';
                 );
                 bd[j*n_rows_bd + i] = val;
