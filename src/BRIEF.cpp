@@ -4,8 +4,7 @@
 #include "BRIEF.h"
 #include <cmath>
 #include <iostream>
-#include "xmmintrin.h"
-#include "emmintrin.h"
+#include "immintrin.h"
 
 
 
@@ -290,30 +289,21 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             a[254] = GET_VALUE(4*254,x_af,y_af,x_a,y_a); b[254] = GET_VALUE(254*4 + 2,x_bf,y_bf,x_b,y_b);
             a[255] = GET_VALUE(4*255,x_af,y_af,x_a,y_a); b[255] = GET_VALUE(255*4 + 2,x_bf,y_bf,x_b,y_b);
             
-            int32_t f[16]  __attribute__((aligned(32)));
-            f[0] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*0)),_mm_load_si128((__m128i const*) (b+16*0))));
-            f[1] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*1)),_mm_load_si128((__m128i const*) (b+16*1))));
-            f[2] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*2)),_mm_load_si128((__m128i const*) (b+16*2))));
-            f[3] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*3)),_mm_load_si128((__m128i const*) (b+16*3))));
-            f[4] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*4)),_mm_load_si128((__m128i const*) (b+16*4))));
-            f[5] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*5)),_mm_load_si128((__m128i const*) (b+16*5))));
-            f[6] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*6)),_mm_load_si128((__m128i const*) (b+16*6))));
-            f[7] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*7)),_mm_load_si128((__m128i const*) (b+16*7))));
-            f[8] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*8)),_mm_load_si128((__m128i const*) (b+16*8))));
-            f[9] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*9)),_mm_load_si128((__m128i const*) (b+16*9))));
-            f[10] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*10)),_mm_load_si128((__m128i const*) (b+16*10))));
-            f[11] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*11)),_mm_load_si128((__m128i const*) (b+16*11))));
-            f[12] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*12)),_mm_load_si128((__m128i const*) (b+16*12))));
-            f[13] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*13)),_mm_load_si128((__m128i const*) (b+16*13))));
-            f[14] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*14)),_mm_load_si128((__m128i const*) (b+16*14))));
-            f[15] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*15)),_mm_load_si128((__m128i const*) (b+16*15))));
+            int32_t f[8]  __attribute__((aligned(32)));
+            f[0] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*0)),_mm256_loadu_si256((__m256i const*) (b+32*0))));
+            f[1] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*1)),_mm256_loadu_si256((__m256i const*) (b+32*1))));
+            f[2] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*2)),_mm256_loadu_si256((__m256i const*) (b+32*2))));
+            f[3] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*3)),_mm256_loadu_si256((__m256i const*) (b+32*3))));
+            f[4] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*4)),_mm256_loadu_si256((__m256i const*) (b+32*4))));
+            f[5] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*5)),_mm256_loadu_si256((__m256i const*) (b+32*5))));
+            f[6] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*6)),_mm256_loadu_si256((__m256i const*) (b+32*6))));
+            f[7] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*7)),_mm256_loadu_si256((__m256i const*) (b+32*7))));
             
-            //int32_t g[16] __attribute__((aligned(32)));
 
-            bd[j*n_rows_bd + 0] = ((int64_t)(f[0*4])) + ((int64_t)(f[0*4+1]) << 16) + ((int64_t)(f[0*4+2])<< 32) + ((int64_t)(f[0*4+3])<< 48);
-            bd[j*n_rows_bd + 1] = ((int64_t)(f[1*4])) + ((int64_t)(f[1*4+1]) << 16) + ((int64_t)(f[1*4+2])<< 32) + ((int64_t)(f[1*4+3])<< 48);
-            bd[j*n_rows_bd + 2] = ((int64_t)(f[2*4])) + ((int64_t)(f[2*4+1]) << 16) + ((int64_t)(f[2*4+2])<< 32) + ((int64_t)(f[2*4+3])<< 48);
-            bd[j*n_rows_bd + 3] = ((int64_t)(f[3*4])) + ((int64_t)(f[3*4+1]) << 16) + ((int64_t)(f[3*4+2])<< 32) + ((int64_t)(f[3*4+3])<< 48);
+            bd[j*n_rows_bd + 0] = ((int64_t)(f[0*2])) + ((int64_t)(f[0*4+2])<< 32);
+            bd[j*n_rows_bd + 1] = ((int64_t)(f[1*2])) + ((int64_t)(f[1*4+2])<< 32);
+            bd[j*n_rows_bd + 2] = ((int64_t)(f[2*2])) + ((int64_t)(f[2*4+2])<< 32);
+            bd[j*n_rows_bd + 3] = ((int64_t)(f[3*2])) + ((int64_t)(f[3*4+2])<< 32);
             
         }
     }

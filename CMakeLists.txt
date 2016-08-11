@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(BRIEF CXX)
 
 set(CMAKE_CXX_COMPILER "/usr/local/bin/icpc")
-set(OPTIMIZATION_FLAGS "-O3 -qopenmp -fomit-frame-pointer -march=native -ansi-alias")
+set(OPTIMIZATION_FLAGS "-O3 -qopenmp -fomit-frame-pointer -march=native -ansi-alias -mavx")
 set(USER_DEFINES "-DN_THREADS=4")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OPTIMIZATION_FLAGS} -Wall -std=c++14 ${USER_DEFINES}")
 

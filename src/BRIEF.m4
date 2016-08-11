@@ -3,8 +3,7 @@ include(`./src/Unroll.m4')
 #include "BRIEF.h"
 #include <cmath>
 #include <iostream>
-#include "xmmintrin.h"
-#include "emmintrin.h"
+#include "immintrin.h"
 
 define(intx_t,`ifelse(SIZE_BITS_HAMING,32, int32_t, int64_t)')
 define(intx_suffix,`ifelse(SIZE_BITS_HAMING,32,,L)')
@@ -35,14 +34,13 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             forloop(l,0,255,
             a[l] = GET_VALUE(4*`l',x_af,y_af,x_a,y_a); b[l] = GET_VALUE(`l'*4 + 2,x_bf,y_bf,x_b,y_b);
             )
-            int32_t f[16]  __attribute__((aligned(32)));
-            forloop(l,0,15,
-            f[l] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*l)),_mm_load_si128((__m128i const*) (b+16*l))));
+            int32_t f[8]  __attribute__((aligned(32)));
+            forloop(l,0,7,
+            f[l] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*l)),_mm256_loadu_si256((__m256i const*) (b+32*l))));
             )
-            //int32_t g[16] __attribute__((aligned(32)));
 
             forloop(l,0,3,
-            bd[j*n_rows_bd + l] = ((int64_t)(f[l*4])) + ((int64_t)(f[l*4+1]) << 16) + ((int64_t)(f[l*4+2])<< 32) + ((int64_t)(f[l*4+3])<< 48);
+            bd[j*n_rows_bd + l] = ((int64_t)(f[l*2])) + ((int64_t)(f[l*4+2])<< 32);
             )
         }
     }
