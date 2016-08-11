@@ -10,9 +10,9 @@
 
 
 
-#define GET_VALUE(i_pattern) \
-               (xj = gaussian_bit_pattern_31[i_pattern]*cos_angle - gaussian_bit_pattern_31[i_pattern+1]*sin_angle, \
-                yj = gaussian_bit_pattern_31[i_pattern]*sin_angle + gaussian_bit_pattern_31[i_pattern+1]*cos_angle, \
+#define GET_VALUE(k) \
+               (xj = gaussian_bit_pattern_31[k]*cos_angle - gaussian_bit_pattern_31[k+1]*sin_angle, \
+                yj = gaussian_bit_pattern_31[k]*sin_angle + gaussian_bit_pattern_31[k+1]*cos_angle, \
                 ix = _mm_cvtss_si32(_mm_set_ss( xj )), \
                 iy = _mm_cvtss_si32(_mm_set_ss( yj )), \
                 *(image_src_center + iy*stride_image + ix*n_channels))
@@ -31,138 +31,76 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             unsigned char *image_src_center = image_src + y[j] * stride_image + x[j] * n_channels;
             // N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING = 4
             for (int i = 0; i < N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING; i++) {
-                int i_pattern = i * SIZE_BITS_HAMING;
-                unsigned char t0, t1, val;
-                t0 = GET_VALUE(i_pattern); t1 = GET_VALUE(i_pattern + 2);
-                val = t0 < t1;
-                t0 = GET_VALUE(i_pattern + 1*4 ); t1 = GET_VALUE(i_pattern + 1*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 1;
-                t0 = GET_VALUE(i_pattern + 2*4 ); t1 = GET_VALUE(i_pattern + 2*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 2;
-                t0 = GET_VALUE(i_pattern + 3*4 ); t1 = GET_VALUE(i_pattern + 3*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 3;
-                t0 = GET_VALUE(i_pattern + 4*4 ); t1 = GET_VALUE(i_pattern + 4*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 4;
-                t0 = GET_VALUE(i_pattern + 5*4 ); t1 = GET_VALUE(i_pattern + 5*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 5;
-                t0 = GET_VALUE(i_pattern + 6*4 ); t1 = GET_VALUE(i_pattern + 6*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 6;
-                t0 = GET_VALUE(i_pattern + 7*4 ); t1 = GET_VALUE(i_pattern + 7*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 7;
-                t0 = GET_VALUE(i_pattern + 8*4 ); t1 = GET_VALUE(i_pattern + 8*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 8;
-                t0 = GET_VALUE(i_pattern + 9*4 ); t1 = GET_VALUE(i_pattern + 9*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 9;
-                t0 = GET_VALUE(i_pattern + 10*4 ); t1 = GET_VALUE(i_pattern + 10*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 10;
-                t0 = GET_VALUE(i_pattern + 11*4 ); t1 = GET_VALUE(i_pattern + 11*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 11;
-                t0 = GET_VALUE(i_pattern + 12*4 ); t1 = GET_VALUE(i_pattern + 12*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 12;
-                t0 = GET_VALUE(i_pattern + 13*4 ); t1 = GET_VALUE(i_pattern + 13*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 13;
-                t0 = GET_VALUE(i_pattern + 14*4 ); t1 = GET_VALUE(i_pattern + 14*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 14;
-                t0 = GET_VALUE(i_pattern + 15*4 ); t1 = GET_VALUE(i_pattern + 15*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 15;
-                t0 = GET_VALUE(i_pattern + 16*4 ); t1 = GET_VALUE(i_pattern + 16*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 16;
-                t0 = GET_VALUE(i_pattern + 17*4 ); t1 = GET_VALUE(i_pattern + 17*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 17;
-                t0 = GET_VALUE(i_pattern + 18*4 ); t1 = GET_VALUE(i_pattern + 18*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 18;
-                t0 = GET_VALUE(i_pattern + 19*4 ); t1 = GET_VALUE(i_pattern + 19*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 19;
-                t0 = GET_VALUE(i_pattern + 20*4 ); t1 = GET_VALUE(i_pattern + 20*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 20;
-                t0 = GET_VALUE(i_pattern + 21*4 ); t1 = GET_VALUE(i_pattern + 21*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 21;
-                t0 = GET_VALUE(i_pattern + 22*4 ); t1 = GET_VALUE(i_pattern + 22*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 22;
-                t0 = GET_VALUE(i_pattern + 23*4 ); t1 = GET_VALUE(i_pattern + 23*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 23;
-                t0 = GET_VALUE(i_pattern + 24*4 ); t1 = GET_VALUE(i_pattern + 24*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 24;
-                t0 = GET_VALUE(i_pattern + 25*4 ); t1 = GET_VALUE(i_pattern + 25*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 25;
-                t0 = GET_VALUE(i_pattern + 26*4 ); t1 = GET_VALUE(i_pattern + 26*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 26;
-                t0 = GET_VALUE(i_pattern + 27*4 ); t1 = GET_VALUE(i_pattern + 27*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 27;
-                t0 = GET_VALUE(i_pattern + 28*4 ); t1 = GET_VALUE(i_pattern + 28*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 28;
-                t0 = GET_VALUE(i_pattern + 29*4 ); t1 = GET_VALUE(i_pattern + 29*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 29;
-                t0 = GET_VALUE(i_pattern + 30*4 ); t1 = GET_VALUE(i_pattern + 30*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 30;
-                t0 = GET_VALUE(i_pattern + 31*4 ); t1 = GET_VALUE(i_pattern + 31*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 31;
-                t0 = GET_VALUE(i_pattern + 32*4 ); t1 = GET_VALUE(i_pattern + 32*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 32;
-                t0 = GET_VALUE(i_pattern + 33*4 ); t1 = GET_VALUE(i_pattern + 33*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 33;
-                t0 = GET_VALUE(i_pattern + 34*4 ); t1 = GET_VALUE(i_pattern + 34*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 34;
-                t0 = GET_VALUE(i_pattern + 35*4 ); t1 = GET_VALUE(i_pattern + 35*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 35;
-                t0 = GET_VALUE(i_pattern + 36*4 ); t1 = GET_VALUE(i_pattern + 36*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 36;
-                t0 = GET_VALUE(i_pattern + 37*4 ); t1 = GET_VALUE(i_pattern + 37*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 37;
-                t0 = GET_VALUE(i_pattern + 38*4 ); t1 = GET_VALUE(i_pattern + 38*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 38;
-                t0 = GET_VALUE(i_pattern + 39*4 ); t1 = GET_VALUE(i_pattern + 39*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 39;
-                t0 = GET_VALUE(i_pattern + 40*4 ); t1 = GET_VALUE(i_pattern + 40*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 40;
-                t0 = GET_VALUE(i_pattern + 41*4 ); t1 = GET_VALUE(i_pattern + 41*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 41;
-                t0 = GET_VALUE(i_pattern + 42*4 ); t1 = GET_VALUE(i_pattern + 42*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 42;
-                t0 = GET_VALUE(i_pattern + 43*4 ); t1 = GET_VALUE(i_pattern + 43*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 43;
-                t0 = GET_VALUE(i_pattern + 44*4 ); t1 = GET_VALUE(i_pattern + 44*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 44;
-                t0 = GET_VALUE(i_pattern + 45*4 ); t1 = GET_VALUE(i_pattern + 45*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 45;
-                t0 = GET_VALUE(i_pattern + 46*4 ); t1 = GET_VALUE(i_pattern + 46*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 46;
-                t0 = GET_VALUE(i_pattern + 47*4 ); t1 = GET_VALUE(i_pattern + 47*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 47;
-                t0 = GET_VALUE(i_pattern + 48*4 ); t1 = GET_VALUE(i_pattern + 48*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 48;
-                t0 = GET_VALUE(i_pattern + 49*4 ); t1 = GET_VALUE(i_pattern + 49*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 49;
-                t0 = GET_VALUE(i_pattern + 50*4 ); t1 = GET_VALUE(i_pattern + 50*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 50;
-                t0 = GET_VALUE(i_pattern + 51*4 ); t1 = GET_VALUE(i_pattern + 51*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 51;
-                t0 = GET_VALUE(i_pattern + 52*4 ); t1 = GET_VALUE(i_pattern + 52*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 52;
-                t0 = GET_VALUE(i_pattern + 53*4 ); t1 = GET_VALUE(i_pattern + 53*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 53;
-                t0 = GET_VALUE(i_pattern + 54*4 ); t1 = GET_VALUE(i_pattern + 54*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 54;
-                t0 = GET_VALUE(i_pattern + 55*4 ); t1 = GET_VALUE(i_pattern + 55*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 55;
-                t0 = GET_VALUE(i_pattern + 56*4 ); t1 = GET_VALUE(i_pattern + 56*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 56;
-                t0 = GET_VALUE(i_pattern + 57*4 ); t1 = GET_VALUE(i_pattern + 57*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 57;
-                t0 = GET_VALUE(i_pattern + 58*4 ); t1 = GET_VALUE(i_pattern + 58*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 58;
-                t0 = GET_VALUE(i_pattern + 59*4 ); t1 = GET_VALUE(i_pattern + 59*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 59;
-                t0 = GET_VALUE(i_pattern + 60*4 ); t1 = GET_VALUE(i_pattern + 60*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 60;
-                t0 = GET_VALUE(i_pattern + 61*4 ); t1 = GET_VALUE(i_pattern + 61*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 61;
-                t0 = GET_VALUE(i_pattern + 62*4 ); t1 = GET_VALUE(i_pattern + 62*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 62;
-                t0 = GET_VALUE(i_pattern + 63*4 ); t1 = GET_VALUE(i_pattern + 63*4 + 2);
-                val |= ( int64_t ) (t0 < t1) << 63;
-                ;
-                bd[j*n_rows_bd + i] = val;
+                int i_pat = i * SIZE_BITS_HAMING/ 8;
+                unsigned char a_0 , a_1, a_2, a_3, a_4, a_5, a_6, a_7;
+                unsigned char b_0 , b_1, b_2, b_3, b_4, b_5, b_6, b_7;
+                unsigned char f_0 ,f_1=0,f_2=0,f_3=0,f_4=0,f_5=0,f_6=0,f_7=0;
+                a_0 =GET_VALUE(i_pat*0 + 1*4); b_0 =GET_VALUE(i_pat + 1*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
+                a_0 =GET_VALUE(i_pat*0 + 2*4); b_0 =GET_VALUE(i_pat + 2*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
+                a_0 =GET_VALUE(i_pat*0 + 3*4); b_0 =GET_VALUE(i_pat + 3*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
+                a_0 =GET_VALUE(i_pat*0 + 4*4); b_0 =GET_VALUE(i_pat + 4*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
+                a_0 =GET_VALUE(i_pat*0 + 5*4); b_0 =GET_VALUE(i_pat + 5*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
+                a_0 =GET_VALUE(i_pat*0 + 6*4); b_0 =GET_VALUE(i_pat + 6*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
+                a_0 =GET_VALUE(i_pat*0 + 7*4); b_0 =GET_VALUE(i_pat + 7*4 + 2); f_0 |= (unsigned char)((a_0 < b_0)) << 0;
+                
+                a_1 =GET_VALUE(i_pat*1 + 1*4); b_1 =GET_VALUE(i_pat + 1*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
+                a_1 =GET_VALUE(i_pat*1 + 2*4); b_1 =GET_VALUE(i_pat + 2*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
+                a_1 =GET_VALUE(i_pat*1 + 3*4); b_1 =GET_VALUE(i_pat + 3*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
+                a_1 =GET_VALUE(i_pat*1 + 4*4); b_1 =GET_VALUE(i_pat + 4*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
+                a_1 =GET_VALUE(i_pat*1 + 5*4); b_1 =GET_VALUE(i_pat + 5*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
+                a_1 =GET_VALUE(i_pat*1 + 6*4); b_1 =GET_VALUE(i_pat + 6*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
+                a_1 =GET_VALUE(i_pat*1 + 7*4); b_1 =GET_VALUE(i_pat + 7*4 + 2); f_1 |= (unsigned char)((a_1 < b_1)) << 1;
+                
+                a_2 =GET_VALUE(i_pat*2 + 1*4); b_2 =GET_VALUE(i_pat + 1*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
+                a_2 =GET_VALUE(i_pat*2 + 2*4); b_2 =GET_VALUE(i_pat + 2*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
+                a_2 =GET_VALUE(i_pat*2 + 3*4); b_2 =GET_VALUE(i_pat + 3*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
+                a_2 =GET_VALUE(i_pat*2 + 4*4); b_2 =GET_VALUE(i_pat + 4*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
+                a_2 =GET_VALUE(i_pat*2 + 5*4); b_2 =GET_VALUE(i_pat + 5*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
+                a_2 =GET_VALUE(i_pat*2 + 6*4); b_2 =GET_VALUE(i_pat + 6*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
+                a_2 =GET_VALUE(i_pat*2 + 7*4); b_2 =GET_VALUE(i_pat + 7*4 + 2); f_2 |= (unsigned char)((a_2 < b_2)) << 2;
+                
+                a_3 =GET_VALUE(i_pat*3 + 1*4); b_3 =GET_VALUE(i_pat + 1*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
+                a_3 =GET_VALUE(i_pat*3 + 2*4); b_3 =GET_VALUE(i_pat + 2*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
+                a_3 =GET_VALUE(i_pat*3 + 3*4); b_3 =GET_VALUE(i_pat + 3*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
+                a_3 =GET_VALUE(i_pat*3 + 4*4); b_3 =GET_VALUE(i_pat + 4*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
+                a_3 =GET_VALUE(i_pat*3 + 5*4); b_3 =GET_VALUE(i_pat + 5*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
+                a_3 =GET_VALUE(i_pat*3 + 6*4); b_3 =GET_VALUE(i_pat + 6*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
+                a_3 =GET_VALUE(i_pat*3 + 7*4); b_3 =GET_VALUE(i_pat + 7*4 + 2); f_3 |= (unsigned char)((a_3 < b_3)) << 3;
+                
+                a_4 =GET_VALUE(i_pat*4 + 1*4); b_4 =GET_VALUE(i_pat + 1*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
+                a_4 =GET_VALUE(i_pat*4 + 2*4); b_4 =GET_VALUE(i_pat + 2*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
+                a_4 =GET_VALUE(i_pat*4 + 3*4); b_4 =GET_VALUE(i_pat + 3*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
+                a_4 =GET_VALUE(i_pat*4 + 4*4); b_4 =GET_VALUE(i_pat + 4*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
+                a_4 =GET_VALUE(i_pat*4 + 5*4); b_4 =GET_VALUE(i_pat + 5*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
+                a_4 =GET_VALUE(i_pat*4 + 6*4); b_4 =GET_VALUE(i_pat + 6*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
+                a_4 =GET_VALUE(i_pat*4 + 7*4); b_4 =GET_VALUE(i_pat + 7*4 + 2); f_4 |= (unsigned char)((a_4 < b_4)) << 4;
+                
+                a_5 =GET_VALUE(i_pat*5 + 1*4); b_5 =GET_VALUE(i_pat + 1*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
+                a_5 =GET_VALUE(i_pat*5 + 2*4); b_5 =GET_VALUE(i_pat + 2*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
+                a_5 =GET_VALUE(i_pat*5 + 3*4); b_5 =GET_VALUE(i_pat + 3*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
+                a_5 =GET_VALUE(i_pat*5 + 4*4); b_5 =GET_VALUE(i_pat + 4*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
+                a_5 =GET_VALUE(i_pat*5 + 5*4); b_5 =GET_VALUE(i_pat + 5*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
+                a_5 =GET_VALUE(i_pat*5 + 6*4); b_5 =GET_VALUE(i_pat + 6*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
+                a_5 =GET_VALUE(i_pat*5 + 7*4); b_5 =GET_VALUE(i_pat + 7*4 + 2); f_5 |= (unsigned char)((a_5 < b_5)) << 5;
+                
+                a_6 =GET_VALUE(i_pat*6 + 1*4); b_6 =GET_VALUE(i_pat + 1*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
+                a_6 =GET_VALUE(i_pat*6 + 2*4); b_6 =GET_VALUE(i_pat + 2*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
+                a_6 =GET_VALUE(i_pat*6 + 3*4); b_6 =GET_VALUE(i_pat + 3*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
+                a_6 =GET_VALUE(i_pat*6 + 4*4); b_6 =GET_VALUE(i_pat + 4*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
+                a_6 =GET_VALUE(i_pat*6 + 5*4); b_6 =GET_VALUE(i_pat + 5*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
+                a_6 =GET_VALUE(i_pat*6 + 6*4); b_6 =GET_VALUE(i_pat + 6*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
+                a_6 =GET_VALUE(i_pat*6 + 7*4); b_6 =GET_VALUE(i_pat + 7*4 + 2); f_6 |= (unsigned char)((a_6 < b_6)) << 6;
+                
+                a_7 =GET_VALUE(i_pat*7 + 1*4); b_7 =GET_VALUE(i_pat + 1*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
+                a_7 =GET_VALUE(i_pat*7 + 2*4); b_7 =GET_VALUE(i_pat + 2*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
+                a_7 =GET_VALUE(i_pat*7 + 3*4); b_7 =GET_VALUE(i_pat + 3*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
+                a_7 =GET_VALUE(i_pat*7 + 4*4); b_7 =GET_VALUE(i_pat + 4*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
+                a_7 =GET_VALUE(i_pat*7 + 5*4); b_7 =GET_VALUE(i_pat + 5*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
+                a_7 =GET_VALUE(i_pat*7 + 6*4); b_7 =GET_VALUE(i_pat + 6*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
+                a_7 =GET_VALUE(i_pat*7 + 7*4); b_7 =GET_VALUE(i_pat + 7*4 + 2); f_7 |= (unsigned char)((a_7 < b_7)) << 7;
+                
+                
+                bd[j*n_rows_bd + i] = f_0 | ((int64_t)(f_1)<<1)| ((int64_t)(f_2)<<2)| ((int64_t)(f_3)<<3)| ((int64_t)(f_4)<<4)| ((int64_t)(f_5)<<5)| ((int64_t)(f_6)<<6)| ((int64_t)(f_7)<<7);
             }
         }
     }

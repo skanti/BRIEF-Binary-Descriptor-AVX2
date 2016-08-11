@@ -9,9 +9,9 @@ define(intx_t,`ifelse(SIZE_BITS_HAMING,32, int32_t, int64_t)')
 define(intx_suffix,`ifelse(SIZE_BITS_HAMING,32,,L)')
 define(popcount_x,`ifelse(SIZE_BITS_HAMING,32,_popcnt32,_popcnt64)')
 
-#define GET_VALUE(i_pattern) \
-               (xj = gaussian_bit_pattern_31[i_pattern]*cos_angle - gaussian_bit_pattern_31[i_pattern+1]*sin_angle, \
-                yj = gaussian_bit_pattern_31[i_pattern]*sin_angle + gaussian_bit_pattern_31[i_pattern+1]*cos_angle, \
+#define GET_VALUE(k) \
+               (xj = gaussian_bit_pattern_31[k]*cos_angle - gaussian_bit_pattern_31[k+1]*sin_angle, \
+                yj = gaussian_bit_pattern_31[k]*sin_angle + gaussian_bit_pattern_31[k+1]*cos_angle, \
                 ix = _mm_cvtss_si32(_mm_set_ss( xj )), \
                 iy = _mm_cvtss_si32(_mm_set_ss( yj )), \
                 *(image_src_center + iy*stride_image + ix*n_channels))
@@ -30,15 +30,16 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             unsigned char *image_src_center = image_src + y[j] * stride_image + x[j] * n_channels;
             // `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING' = eval( N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING)
             for (int i = 0; i < `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING'; i++) {
-                int i_pattern = i * `SIZE_BITS_HAMING';
-                unsigned char t0, t1, val;
-                t0 = GET_VALUE(i_pattern); t1 = GET_VALUE(i_pattern + 2);
-                val = t0 < t1;
-                forloop(k,1,eval(SIZE_BITS_HAMING-1),
-                t0 = GET_VALUE(i_pattern + `k'*4 ); t1 = GET_VALUE(i_pattern + `k'*4 + 2);
-                val |= ( intx_t ) (t0 < t1) << `k';
-                );
-                bd[j*n_rows_bd + i] = val;
+                int i_pat = i * `SIZE_BITS_HAMING'/ 8;
+                unsigned char a_0 forloop(k,1,7,`, '`m4_var(a,k)');
+                unsigned char b_0 forloop(k,1,7,`,' `m4_var(b,k)');
+                unsigned char f_0 forloop(k,1,7,`,'`m4_var(f,k)'=0);
+                forloop(k,0,7,
+                `forloop(l,1,eval(SIZE_BITS_HAMING/8-1),
+                `m4_var(a,k)' =GET_VALUE(i_pat*`k' + `l'*4); `m4_var(b,k)' =GET_VALUE(i_pat + `l'*4 + 2); `m4_var(f,k)' |= (unsigned char)((`m4_var(a,k)' < `m4_var(b,k)')) << `k';
+                )'
+                )
+                bd[j*n_rows_bd + i] = f_0 forloop(k,1,7,| ((int64_t)(`m4_var(f,k)')<<k));
             }
         }
     }
