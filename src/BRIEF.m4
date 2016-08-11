@@ -4,6 +4,7 @@ include(`./src/Unroll.m4')
 #include <cmath>
 #include <iostream>
 #include "xmmintrin.h"
+#include "emmintrin.h"
 
 define(intx_t,`ifelse(SIZE_BITS_HAMING,32, int32_t, int64_t)')
 define(intx_suffix,`ifelse(SIZE_BITS_HAMING,32,,L)')
@@ -27,20 +28,20 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             float sin_angle = std::sin(angle[j]);
             unsigned char *image_src_center = image_src + y[j] * stride_image + x[j] * n_channels;
             // `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING' = eval( N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING)
-            for (int i = 0; i < `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING'; i++) {
-                int i_pat = i * 4 *  `SIZE_BITS_HAMING';
-                unsigned char a[8] __attribute__((aligned(16)));
-                unsigned char b[8] __attribute__((aligned(16)));
-                unsigned char f[8] __attribute__((aligned(16)));
-                float x_af, x_bf, y_af, y_bf;
-                int x_a, x_b, y_a, y_b;
-                forloop(k,0,7,
-                `forloop(l,1,eval(SIZE_BITS_HAMING/8-1),
-                a[k] = GET_VALUE(i_pat + `k'*4,x_af,y_af,x_a,y_a); b[k] = GET_VALUE(i_pat + `k'*4 + 2,x_bf,y_bf,x_b,y_b); f[k] |= (unsigned char)(a[k] < b[k]) << `l';
-                )'
-                )
-                bd[j*n_rows_bd + i] = f[0] forloop(k,1,7,+ ((int64_t)(f[k])<<k));
-            }
+            unsigned char a[256] __attribute__((aligned(32)));
+            unsigned char b[256] __attribute__((aligned(32)));
+            float x_af, x_bf, y_af, y_bf;
+            int x_a, x_b, y_a, y_b;
+            forloop(l,0,255,
+            a[l] = GET_VALUE(4*`l',x_af,y_af,x_a,y_a); b[l] = GET_VALUE(`l'*4 + 2,x_bf,y_bf,x_b,y_b);
+            )
+            int32_t f[16];
+            forloop(l,0,15,
+            f[l] =_mm_movemask_epi8(_mm_cmpgt_epi8(_mm_load_si128((__m128i const*)(a+16*l)),_mm_load_si128((__m128i const*) (b+16*l))));
+            )
+            //int32_t g[16] __attribute__((aligned(32)));
+
+            bd[j*n_rows_bd] = ((int64_t)(f[0])) + ((int64_t)(f[1]) << 1) + ((int64_t)(f[2])<<2) + ((int64_t)(f[3])<<3);
         }
     }
 }
