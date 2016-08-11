@@ -43,13 +43,12 @@ int main() {
     std::vector<int> x(n_features), y(n_features);
     std::vector<float> angle(n_features);
     create_synthetic_data(x, y, angle, n_features);
-    BRIEF brief;
     Matrix<haming_type> bd(n_dim_vec, n_features);
     double t_total = 0;
     for (int i = 0; i < n; i++) {
         cv::Mat image = cv::imread(dir + img_basenames[i], CV_LOAD_IMAGE_X);
         Timer::start();
-        brief.rbrief(image.data, HEIGHT_IMAGE, WIDTH_IMAGE, N_CHANNELS, STRIDE_IMAGE,
+        BRIEF::rbrief(image.data, HEIGHT_IMAGE, WIDTH_IMAGE, N_CHANNELS, STRIDE_IMAGE,
                      x.data(), y.data(), angle.data(), n_features, bd.memptr(), bd.n_rows);
         Timer::stop();
         double t = Timer::get_timing_in_ms();
