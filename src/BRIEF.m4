@@ -9,12 +9,12 @@ define(intx_t,`ifelse(SIZE_BITS_HAMING,32, int32_t, int64_t)')
 define(intx_suffix,`ifelse(SIZE_BITS_HAMING,32,,L)')
 define(popcount_x,`ifelse(SIZE_BITS_HAMING,32,_popcnt32,_popcnt64)')
 
-#define GET_VALUE(k) \
-               (xj = gaussian_bit_pattern_31[k]*cos_angle - gaussian_bit_pattern_31[k+1]*sin_angle, \
-                yj = gaussian_bit_pattern_31[k]*sin_angle + gaussian_bit_pattern_31[k+1]*cos_angle, \
-                ix = _mm_cvtss_si32(_mm_set_ss( xj )), \
-                iy = _mm_cvtss_si32(_mm_set_ss( yj )), \
-                *(image_src_center + iy*stride_image + ix*n_channels))
+#define GET_VALUE(k, x_f,y_f, x_i, y_i) \
+                ((x_f) = gaussian_bit_pattern_31[k]*cos_angle - gaussian_bit_pattern_31[k+1]*sin_angle, \
+                (y_f) = gaussian_bit_pattern_31[k]*sin_angle + gaussian_bit_pattern_31[k+1]*cos_angle, \
+                (x_i) = _mm_cvtss_si32(_mm_set_ss( (x_f) )), \
+                (y_i) = _mm_cvtss_si32(_mm_set_ss( (y_f) )), \
+                *(image_src_center + y_i*stride_image + x_i*n_channels))
 
 void
 BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels,
@@ -25,8 +25,6 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             && (y[j] > diag_length_pattern) && y[j] < (height_image - diag_length_pattern)) {
             float cos_angle = std::cos(angle[j]);
             float sin_angle = std::sin(angle[j]);
-            float xj, yj;
-            int ix, iy;
             unsigned char *image_src_center = image_src + y[j] * stride_image + x[j] * n_channels;
             // `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING' = eval( N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING)
             for (int i = 0; i < `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING'; i++) {
@@ -34,9 +32,11 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
                 unsigned char a[8] __attribute__((aligned(16)));
                 unsigned char b[8] __attribute__((aligned(16)));
                 unsigned char f[8] __attribute__((aligned(16)));
+                float x_af, x_bf, y_af, y_bf;
+                int x_a, x_b, y_a, y_b;
                 forloop(k,0,7,
                 `forloop(l,1,eval(SIZE_BITS_HAMING/8-1),
-                a[k] =GET_VALUE(i_pat + `l'*4); b[k] =GET_VALUE(i_pat + `l'*4 + 2); f[k] |= (unsigned char)(a[k] < b[k]) << `k';
+                a[k] = GET_VALUE(i_pat + `k'*4,x_af,y_af,x_a,y_a); b[k] = GET_VALUE(i_pat + `k'*4 + 2,x_bf,y_bf,x_b,y_b); f[k] |= (unsigned char)(a[k] < b[k]) << `l';
                 )'
                 )
                 bd[j*n_rows_bd + i] = f[0] forloop(k,1,7,+ ((int64_t)(f[k])<<k));
