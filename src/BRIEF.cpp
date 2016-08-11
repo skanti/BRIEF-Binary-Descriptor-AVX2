@@ -290,21 +290,17 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             a[255] = GET_VALUE(4*255,x_af,y_af,x_a,y_a); b[255] = GET_VALUE(255*4 + 2,x_bf,y_bf,x_b,y_b);
             
             int32_t f[8]  __attribute__((aligned(32)));
-            f[0] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*0)),_mm256_loadu_si256((__m256i const*) (b+32*0))));
-            f[1] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*1)),_mm256_loadu_si256((__m256i const*) (b+32*1))));
-            f[2] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*2)),_mm256_loadu_si256((__m256i const*) (b+32*2))));
-            f[3] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*3)),_mm256_loadu_si256((__m256i const*) (b+32*3))));
-            f[4] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*4)),_mm256_loadu_si256((__m256i const*) (b+32*4))));
-            f[5] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*5)),_mm256_loadu_si256((__m256i const*) (b+32*5))));
-            f[6] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*6)),_mm256_loadu_si256((__m256i const*) (b+32*6))));
-            f[7] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*7)),_mm256_loadu_si256((__m256i const*) (b+32*7))));
+            f[0] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*0)),_mm256_load_si256((__m256i const*) (b+32*0))));
+            f[1] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*1)),_mm256_load_si256((__m256i const*) (b+32*1))));
+            f[2] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*2)),_mm256_load_si256((__m256i const*) (b+32*2))));
+            f[3] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*3)),_mm256_load_si256((__m256i const*) (b+32*3))));
+            f[4] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*4)),_mm256_load_si256((__m256i const*) (b+32*4))));
+            f[5] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*5)),_mm256_load_si256((__m256i const*) (b+32*5))));
+            f[6] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*6)),_mm256_load_si256((__m256i const*) (b+32*6))));
+            f[7] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*7)),_mm256_load_si256((__m256i const*) (b+32*7))));
             
-
-            bd[j*n_rows_bd + 0] = ((int64_t)(f[0*2])) + ((int64_t)(f[0*4+2])<< 32);
-            bd[j*n_rows_bd + 1] = ((int64_t)(f[1*2])) + ((int64_t)(f[1*4+2])<< 32);
-            bd[j*n_rows_bd + 2] = ((int64_t)(f[2*2])) + ((int64_t)(f[2*4+2])<< 32);
-            bd[j*n_rows_bd + 3] = ((int64_t)(f[3*2])) + ((int64_t)(f[3*4+2])<< 32);
-            
+            __m256i favx = _mm256_load_si256((__m256i const*)(f));
+            _mm256_store_si256((__m256i*)(bd + j*n_rows_bd), favx);
         }
     }
 }

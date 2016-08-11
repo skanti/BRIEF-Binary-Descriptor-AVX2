@@ -36,12 +36,10 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             )
             int32_t f[8]  __attribute__((aligned(32)));
             forloop(l,0,7,
-            f[l] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_loadu_si256((__m256i const*)(a+32*l)),_mm256_loadu_si256((__m256i const*) (b+32*l))));
+            f[l] =_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*l)),_mm256_load_si256((__m256i const*) (b+32*l))));
             )
-
-            forloop(l,0,3,
-            bd[j*n_rows_bd + l] = ((int64_t)(f[l*2])) + ((int64_t)(f[l*4+2])<< 32);
-            )
+            __m256i favx = _mm256_load_si256((__m256i const*)(f));
+            _mm256_store_si256((__m256i*)(bd + j*n_rows_bd), favx);
         }
     }
 }
