@@ -32,7 +32,7 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             // N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING = 4
             for (int i = 0; i < N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING; i++) {
                 int i_pattern = i * SIZE_BITS_HAMING;
-                int64_t t0, t1, val;
+                unsigned char t0, t1, val;
                 t0 = GET_VALUE(i_pattern); t1 = GET_VALUE(i_pattern + 2);
                 val = t0 < t1;
                 i_pattern += 4;
