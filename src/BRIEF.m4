@@ -14,7 +14,7 @@ define(popcount_x,`ifelse(SIZE_BITS_HAMING,32,_popcnt32,_popcnt64)')
                 yj = gaussian_bit_pattern_31[i_pattern]*sin_angle + gaussian_bit_pattern_31[i_pattern+1]*cos_angle, \
                 ix = _mm_cvtss_si32(_mm_set_ss( xj )), \
                 iy = _mm_cvtss_si32(_mm_set_ss( yj )), \
-                *(image_src_center + iy*stride_image + ix*n_channels) )
+                *(image_src_center + iy*stride_image + ix*n_channels))
 
 void
 BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels,

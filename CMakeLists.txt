@@ -15,7 +15,6 @@ set(SOURCE_FILES_CPP
 
 set(SOURCE_FILES_H
         src/BRIEF.h
-        src/AlignedAllocator.h
         src/Types.h)
 
 
