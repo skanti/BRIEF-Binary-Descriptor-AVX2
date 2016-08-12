@@ -19,6 +19,12 @@ mostly packed avx2 instructions.
 - Complete unrolling of the ```i = 0 ... 256``` loop
 - AVX2 masking (```_mm256_movemask_epi8```) and comparing (```_mm256_cmpeq_epi8```) and load-n-store removes need of bitshifting
 
+## Photos
+#### PHOTO1: Assembly output shows nice and consistent packed instructions
+<a href="http://tinypic.com?ref=34z0gh1" target="_blank"><img src="http://i65.tinypic.com/34z0gh1.jpg" border="0" ></a>
+#### PHOTO2: Intel intrinsics handle gathering and ordering of bits in a packed way:
+<a href="http://tinypic.com?ref=im2xkp" target="_blank"><img src="http://i63.tinypic.com/im2xkp.jpg" border="0"></a>
+
 ## To-Do
 - [x] Unroll loops by pre-processor
 - [ ] Try to speed up memory-bound bottleneck by AVX2 gather/scatter instructions
