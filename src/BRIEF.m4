@@ -23,8 +23,6 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             float tri1[4]  __attribute__((aligned(32))) = {sin_angle,cos_angle, sin_angle, cos_angle};
             unsigned char *image_center = image_src + y[j] * stride_image + x[j] * n_channels;
             // `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING' = eval( N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING)
-            unsigned char a[256] __attribute__((aligned(32)));
-            unsigned char b[256] __attribute__((aligned(32)));
             int32_t i_x_a[256] __attribute__((aligned(32)));
             int32_t i_y_a[256] __attribute__((aligned(32)));
             int32_t i_x_b[256] __attribute__((aligned(32)));
@@ -37,14 +35,12 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
                     i_x_b[i] = (int)(gaussian_bit_pattern_31_x_b[i] * cos_angle - gaussian_bit_pattern_31_y_b[i] * sin_angle);
                     i_y_b[i] = (int)(gaussian_bit_pattern_31_x_b[i] * sin_angle + gaussian_bit_pattern_31_y_b[i] * cos_angle);
             }
-            forloop(i,0, 255,
-                a[i]= *(image_center + i_y_a[i]*stride_image + i_x_a[i]*n_channels); b[i]= *(image_center + i_y_b[i]*stride_image + i_x_b[i]*n_channels);
-            )
-            
-            unsigned char f[32] __attribute__((aligned(32)));
-            forloop(k,0,31,
-            `forloop(l,0,7,
-            f[k] |= (unsigned char) (a[k*8 + l] > b[k*8 + l]) << l;
+
+            int32_t f[8] __attribute__((aligned(32)));
+            forloop(k,0,8,
+            `forloop(l,0,31,
+            f[k] |= (*(image_center + i_y_a[k*32 + l]*stride_image + i_x_a[k*32 + l])
+                        > *(image_center + i_y_b[k*32 + l]*stride_image + i_x_b[k*32 + l])) << l;
             )'
             )
             forloop(k,0,3,
