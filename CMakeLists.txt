@@ -3,7 +3,7 @@ project(BRIEF CXX)
 
 set(CMAKE_CXX_COMPILER "/usr/local/bin/icpc")
 set(OPTIMIZATION_FLAGS "-O3 -qopenmp -fomit-frame-pointer -march=native -ansi-alias")
-set(USER_DEFINES "-DN_THREADS=4")
+set(USER_DEFINES "-DN_THREADS=4 -DNDEBUG")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OPTIMIZATION_FLAGS} -Wall -std=c++14 ${USER_DEFINES}")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
@@ -31,6 +31,6 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.cpp
         COMMAND m4 -DSIZE_BITS_HAMING=64 -DN_DIM_BINARYDESCRIPTOR=256 ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.m4 > $@
         MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.m4
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT ${USER_DEFINES})
+        COMMENT "Creating file from m4.")
 
 set_source_files_properties(src/BRIEF.cpp PROPERTIES GENERATED true)
