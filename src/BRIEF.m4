@@ -31,10 +31,9 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             int32_t i_y_b[256] __attribute__((aligned(32)));
             kernel1(gaussian_bit_pattern_31_x_a,gaussian_bit_pattern_31_y_a,gaussian_bit_pattern_31_x_b,gaussian_bit_pattern_31_y_b,
                 i_x_a,i_y_a, i_x_b,i_y_b, cos_angle, sin_angle);
-            for (int i = 0; i < 256; i++) {
-                a[i]= *(image_src_center + i_y_a[i]*stride_image + i_x_a[i]*n_channels);
-                b[i]= *(image_src_center + i_y_b[i]*stride_image + i_x_b[i]*n_channels);
-            }
+            forloop(i,0, 255,
+                a[i]= *(image_src_center + i_y_a[i]*stride_image + i_x_a[i]*n_channels); b[i]= *(image_src_center + i_y_b[i]*stride_image + i_x_b[i]*n_channels);
+            )
             int32_t f[8]  __attribute__((aligned(32)));
             forloop(l,0,7,
             f[l] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*l)),_mm256_load_si256((__m256i const*) (b+32*l))));

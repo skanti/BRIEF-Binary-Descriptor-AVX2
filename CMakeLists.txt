@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(BRIEF CXX)
 
 set(CMAKE_CXX_COMPILER "/usr/local/bin/icpc")
-#set(OPTIMIZATION_FLAGS "-O3 -qopenmp -fomit-frame-pointer -march=native -ansi-alias")
+set(OPTIMIZATION_FLAGS "-O3 -qopenmp -fomit-frame-pointer -march=native -ansi-alias")
 set(USER_DEFINES "-DN_THREADS=4")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OPTIMIZATION_FLAGS} -Wall -std=c++14 ${USER_DEFINES}")
 
@@ -38,7 +38,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.cpp
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/build/MathKernels.o
         PRE_BUILD
-        COMMAND ispc -O2 --arch=x86-64 --target=avx2 ${CMAKE_CURRENT_SOURCE_DIR}/src/MathKernels.ispc -o $@
+        COMMAND ispc -O2 --arch=x86-64 --target=avx2 --opt=fast-math ${CMAKE_CURRENT_SOURCE_DIR}/src/MathKernels.ispc -o $@
         MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/src/MathKernels.ispc
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Compiling ISPC files.")
