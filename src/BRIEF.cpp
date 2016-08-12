@@ -30,8 +30,14 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             int32_t i_y_a[256] __attribute__((aligned(32)));
             int32_t i_x_b[256] __attribute__((aligned(32)));
             int32_t i_y_b[256] __attribute__((aligned(32)));
-            kernel1(gaussian_bit_pattern_31_x_a,gaussian_bit_pattern_31_y_a,gaussian_bit_pattern_31_x_b,gaussian_bit_pattern_31_y_b,
-                i_x_a,i_y_a, i_x_b,i_y_b, cos_angle, sin_angle);
+            //kernel1(gaussian_bit_pattern_31_x_a,gaussian_bit_pattern_31_y_a,gaussian_bit_pattern_31_x_b,gaussian_bit_pattern_31_y_b,
+            //    i_x_a,i_y_a, i_x_b,i_y_b, cos_angle, sin_angle);
+            for (int i = 0 ; i< 256; i++)  {
+                    i_x_a[i] = (int)(gaussian_bit_pattern_31_x_a[i] * cos_angle - gaussian_bit_pattern_31_y_a[i] * sin_angle);
+                    i_y_a[i] = (int)(gaussian_bit_pattern_31_x_a[i] * sin_angle + gaussian_bit_pattern_31_y_a[i] * cos_angle);
+                    i_x_b[i] = (int)(gaussian_bit_pattern_31_x_b[i] * cos_angle - gaussian_bit_pattern_31_y_b[i] * sin_angle);
+                    i_y_b[i] = (int)(gaussian_bit_pattern_31_x_b[i] * sin_angle + gaussian_bit_pattern_31_y_b[i] * cos_angle);
+            }
             a[0]= *(image_center + i_y_a[0]*stride_image + i_x_a[0]*n_channels); b[0]= *(image_center + i_y_b[0]*stride_image + i_x_b[0]*n_channels);
             a[1]= *(image_center + i_y_a[1]*stride_image + i_x_a[1]*n_channels); b[1]= *(image_center + i_y_b[1]*stride_image + i_x_b[1]*n_channels);
             a[2]= *(image_center + i_y_a[2]*stride_image + i_x_a[2]*n_channels); b[2]= *(image_center + i_y_b[2]*stride_image + i_x_b[2]*n_channels);
@@ -289,18 +295,303 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             a[254]= *(image_center + i_y_a[254]*stride_image + i_x_a[254]*n_channels); b[254]= *(image_center + i_y_b[254]*stride_image + i_x_b[254]*n_channels);
             a[255]= *(image_center + i_y_a[255]*stride_image + i_x_a[255]*n_channels); b[255]= *(image_center + i_y_b[255]*stride_image + i_x_b[255]*n_channels);
             
-            int32_t f[8]  __attribute__((aligned(32)));
-            f[0] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*0)),_mm256_load_si256((__m256i const*) (b+32*0))));
-            f[1] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*1)),_mm256_load_si256((__m256i const*) (b+32*1))));
-            f[2] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*2)),_mm256_load_si256((__m256i const*) (b+32*2))));
-            f[3] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*3)),_mm256_load_si256((__m256i const*) (b+32*3))));
-            f[4] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*4)),_mm256_load_si256((__m256i const*) (b+32*4))));
-            f[5] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*5)),_mm256_load_si256((__m256i const*) (b+32*5))));
-            f[6] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*6)),_mm256_load_si256((__m256i const*) (b+32*6))));
-            f[7] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*7)),_mm256_load_si256((__m256i const*) (b+32*7))));
             
-            __m256i favx = _mm256_load_si256((__m256i const*)(f));
-            _mm256_store_si256((__m256i*)(bd + j*n_rows_bd), favx);
+            unsigned char f[32] __attribute__((aligned(32)));
+            f[0] |= (unsigned char) (a[0*8 + 0] > b[0*8 + 0]) << 0;
+            f[0] |= (unsigned char) (a[0*8 + 1] > b[0*8 + 1]) << 1;
+            f[0] |= (unsigned char) (a[0*8 + 2] > b[0*8 + 2]) << 2;
+            f[0] |= (unsigned char) (a[0*8 + 3] > b[0*8 + 3]) << 3;
+            f[0] |= (unsigned char) (a[0*8 + 4] > b[0*8 + 4]) << 4;
+            f[0] |= (unsigned char) (a[0*8 + 5] > b[0*8 + 5]) << 5;
+            f[0] |= (unsigned char) (a[0*8 + 6] > b[0*8 + 6]) << 6;
+            f[0] |= (unsigned char) (a[0*8 + 7] > b[0*8 + 7]) << 7;
+            
+            f[1] |= (unsigned char) (a[1*8 + 0] > b[1*8 + 0]) << 0;
+            f[1] |= (unsigned char) (a[1*8 + 1] > b[1*8 + 1]) << 1;
+            f[1] |= (unsigned char) (a[1*8 + 2] > b[1*8 + 2]) << 2;
+            f[1] |= (unsigned char) (a[1*8 + 3] > b[1*8 + 3]) << 3;
+            f[1] |= (unsigned char) (a[1*8 + 4] > b[1*8 + 4]) << 4;
+            f[1] |= (unsigned char) (a[1*8 + 5] > b[1*8 + 5]) << 5;
+            f[1] |= (unsigned char) (a[1*8 + 6] > b[1*8 + 6]) << 6;
+            f[1] |= (unsigned char) (a[1*8 + 7] > b[1*8 + 7]) << 7;
+            
+            f[2] |= (unsigned char) (a[2*8 + 0] > b[2*8 + 0]) << 0;
+            f[2] |= (unsigned char) (a[2*8 + 1] > b[2*8 + 1]) << 1;
+            f[2] |= (unsigned char) (a[2*8 + 2] > b[2*8 + 2]) << 2;
+            f[2] |= (unsigned char) (a[2*8 + 3] > b[2*8 + 3]) << 3;
+            f[2] |= (unsigned char) (a[2*8 + 4] > b[2*8 + 4]) << 4;
+            f[2] |= (unsigned char) (a[2*8 + 5] > b[2*8 + 5]) << 5;
+            f[2] |= (unsigned char) (a[2*8 + 6] > b[2*8 + 6]) << 6;
+            f[2] |= (unsigned char) (a[2*8 + 7] > b[2*8 + 7]) << 7;
+            
+            f[3] |= (unsigned char) (a[3*8 + 0] > b[3*8 + 0]) << 0;
+            f[3] |= (unsigned char) (a[3*8 + 1] > b[3*8 + 1]) << 1;
+            f[3] |= (unsigned char) (a[3*8 + 2] > b[3*8 + 2]) << 2;
+            f[3] |= (unsigned char) (a[3*8 + 3] > b[3*8 + 3]) << 3;
+            f[3] |= (unsigned char) (a[3*8 + 4] > b[3*8 + 4]) << 4;
+            f[3] |= (unsigned char) (a[3*8 + 5] > b[3*8 + 5]) << 5;
+            f[3] |= (unsigned char) (a[3*8 + 6] > b[3*8 + 6]) << 6;
+            f[3] |= (unsigned char) (a[3*8 + 7] > b[3*8 + 7]) << 7;
+            
+            f[4] |= (unsigned char) (a[4*8 + 0] > b[4*8 + 0]) << 0;
+            f[4] |= (unsigned char) (a[4*8 + 1] > b[4*8 + 1]) << 1;
+            f[4] |= (unsigned char) (a[4*8 + 2] > b[4*8 + 2]) << 2;
+            f[4] |= (unsigned char) (a[4*8 + 3] > b[4*8 + 3]) << 3;
+            f[4] |= (unsigned char) (a[4*8 + 4] > b[4*8 + 4]) << 4;
+            f[4] |= (unsigned char) (a[4*8 + 5] > b[4*8 + 5]) << 5;
+            f[4] |= (unsigned char) (a[4*8 + 6] > b[4*8 + 6]) << 6;
+            f[4] |= (unsigned char) (a[4*8 + 7] > b[4*8 + 7]) << 7;
+            
+            f[5] |= (unsigned char) (a[5*8 + 0] > b[5*8 + 0]) << 0;
+            f[5] |= (unsigned char) (a[5*8 + 1] > b[5*8 + 1]) << 1;
+            f[5] |= (unsigned char) (a[5*8 + 2] > b[5*8 + 2]) << 2;
+            f[5] |= (unsigned char) (a[5*8 + 3] > b[5*8 + 3]) << 3;
+            f[5] |= (unsigned char) (a[5*8 + 4] > b[5*8 + 4]) << 4;
+            f[5] |= (unsigned char) (a[5*8 + 5] > b[5*8 + 5]) << 5;
+            f[5] |= (unsigned char) (a[5*8 + 6] > b[5*8 + 6]) << 6;
+            f[5] |= (unsigned char) (a[5*8 + 7] > b[5*8 + 7]) << 7;
+            
+            f[6] |= (unsigned char) (a[6*8 + 0] > b[6*8 + 0]) << 0;
+            f[6] |= (unsigned char) (a[6*8 + 1] > b[6*8 + 1]) << 1;
+            f[6] |= (unsigned char) (a[6*8 + 2] > b[6*8 + 2]) << 2;
+            f[6] |= (unsigned char) (a[6*8 + 3] > b[6*8 + 3]) << 3;
+            f[6] |= (unsigned char) (a[6*8 + 4] > b[6*8 + 4]) << 4;
+            f[6] |= (unsigned char) (a[6*8 + 5] > b[6*8 + 5]) << 5;
+            f[6] |= (unsigned char) (a[6*8 + 6] > b[6*8 + 6]) << 6;
+            f[6] |= (unsigned char) (a[6*8 + 7] > b[6*8 + 7]) << 7;
+            
+            f[7] |= (unsigned char) (a[7*8 + 0] > b[7*8 + 0]) << 0;
+            f[7] |= (unsigned char) (a[7*8 + 1] > b[7*8 + 1]) << 1;
+            f[7] |= (unsigned char) (a[7*8 + 2] > b[7*8 + 2]) << 2;
+            f[7] |= (unsigned char) (a[7*8 + 3] > b[7*8 + 3]) << 3;
+            f[7] |= (unsigned char) (a[7*8 + 4] > b[7*8 + 4]) << 4;
+            f[7] |= (unsigned char) (a[7*8 + 5] > b[7*8 + 5]) << 5;
+            f[7] |= (unsigned char) (a[7*8 + 6] > b[7*8 + 6]) << 6;
+            f[7] |= (unsigned char) (a[7*8 + 7] > b[7*8 + 7]) << 7;
+            
+            f[8] |= (unsigned char) (a[8*8 + 0] > b[8*8 + 0]) << 0;
+            f[8] |= (unsigned char) (a[8*8 + 1] > b[8*8 + 1]) << 1;
+            f[8] |= (unsigned char) (a[8*8 + 2] > b[8*8 + 2]) << 2;
+            f[8] |= (unsigned char) (a[8*8 + 3] > b[8*8 + 3]) << 3;
+            f[8] |= (unsigned char) (a[8*8 + 4] > b[8*8 + 4]) << 4;
+            f[8] |= (unsigned char) (a[8*8 + 5] > b[8*8 + 5]) << 5;
+            f[8] |= (unsigned char) (a[8*8 + 6] > b[8*8 + 6]) << 6;
+            f[8] |= (unsigned char) (a[8*8 + 7] > b[8*8 + 7]) << 7;
+            
+            f[9] |= (unsigned char) (a[9*8 + 0] > b[9*8 + 0]) << 0;
+            f[9] |= (unsigned char) (a[9*8 + 1] > b[9*8 + 1]) << 1;
+            f[9] |= (unsigned char) (a[9*8 + 2] > b[9*8 + 2]) << 2;
+            f[9] |= (unsigned char) (a[9*8 + 3] > b[9*8 + 3]) << 3;
+            f[9] |= (unsigned char) (a[9*8 + 4] > b[9*8 + 4]) << 4;
+            f[9] |= (unsigned char) (a[9*8 + 5] > b[9*8 + 5]) << 5;
+            f[9] |= (unsigned char) (a[9*8 + 6] > b[9*8 + 6]) << 6;
+            f[9] |= (unsigned char) (a[9*8 + 7] > b[9*8 + 7]) << 7;
+            
+            f[10] |= (unsigned char) (a[10*8 + 0] > b[10*8 + 0]) << 0;
+            f[10] |= (unsigned char) (a[10*8 + 1] > b[10*8 + 1]) << 1;
+            f[10] |= (unsigned char) (a[10*8 + 2] > b[10*8 + 2]) << 2;
+            f[10] |= (unsigned char) (a[10*8 + 3] > b[10*8 + 3]) << 3;
+            f[10] |= (unsigned char) (a[10*8 + 4] > b[10*8 + 4]) << 4;
+            f[10] |= (unsigned char) (a[10*8 + 5] > b[10*8 + 5]) << 5;
+            f[10] |= (unsigned char) (a[10*8 + 6] > b[10*8 + 6]) << 6;
+            f[10] |= (unsigned char) (a[10*8 + 7] > b[10*8 + 7]) << 7;
+            
+            f[11] |= (unsigned char) (a[11*8 + 0] > b[11*8 + 0]) << 0;
+            f[11] |= (unsigned char) (a[11*8 + 1] > b[11*8 + 1]) << 1;
+            f[11] |= (unsigned char) (a[11*8 + 2] > b[11*8 + 2]) << 2;
+            f[11] |= (unsigned char) (a[11*8 + 3] > b[11*8 + 3]) << 3;
+            f[11] |= (unsigned char) (a[11*8 + 4] > b[11*8 + 4]) << 4;
+            f[11] |= (unsigned char) (a[11*8 + 5] > b[11*8 + 5]) << 5;
+            f[11] |= (unsigned char) (a[11*8 + 6] > b[11*8 + 6]) << 6;
+            f[11] |= (unsigned char) (a[11*8 + 7] > b[11*8 + 7]) << 7;
+            
+            f[12] |= (unsigned char) (a[12*8 + 0] > b[12*8 + 0]) << 0;
+            f[12] |= (unsigned char) (a[12*8 + 1] > b[12*8 + 1]) << 1;
+            f[12] |= (unsigned char) (a[12*8 + 2] > b[12*8 + 2]) << 2;
+            f[12] |= (unsigned char) (a[12*8 + 3] > b[12*8 + 3]) << 3;
+            f[12] |= (unsigned char) (a[12*8 + 4] > b[12*8 + 4]) << 4;
+            f[12] |= (unsigned char) (a[12*8 + 5] > b[12*8 + 5]) << 5;
+            f[12] |= (unsigned char) (a[12*8 + 6] > b[12*8 + 6]) << 6;
+            f[12] |= (unsigned char) (a[12*8 + 7] > b[12*8 + 7]) << 7;
+            
+            f[13] |= (unsigned char) (a[13*8 + 0] > b[13*8 + 0]) << 0;
+            f[13] |= (unsigned char) (a[13*8 + 1] > b[13*8 + 1]) << 1;
+            f[13] |= (unsigned char) (a[13*8 + 2] > b[13*8 + 2]) << 2;
+            f[13] |= (unsigned char) (a[13*8 + 3] > b[13*8 + 3]) << 3;
+            f[13] |= (unsigned char) (a[13*8 + 4] > b[13*8 + 4]) << 4;
+            f[13] |= (unsigned char) (a[13*8 + 5] > b[13*8 + 5]) << 5;
+            f[13] |= (unsigned char) (a[13*8 + 6] > b[13*8 + 6]) << 6;
+            f[13] |= (unsigned char) (a[13*8 + 7] > b[13*8 + 7]) << 7;
+            
+            f[14] |= (unsigned char) (a[14*8 + 0] > b[14*8 + 0]) << 0;
+            f[14] |= (unsigned char) (a[14*8 + 1] > b[14*8 + 1]) << 1;
+            f[14] |= (unsigned char) (a[14*8 + 2] > b[14*8 + 2]) << 2;
+            f[14] |= (unsigned char) (a[14*8 + 3] > b[14*8 + 3]) << 3;
+            f[14] |= (unsigned char) (a[14*8 + 4] > b[14*8 + 4]) << 4;
+            f[14] |= (unsigned char) (a[14*8 + 5] > b[14*8 + 5]) << 5;
+            f[14] |= (unsigned char) (a[14*8 + 6] > b[14*8 + 6]) << 6;
+            f[14] |= (unsigned char) (a[14*8 + 7] > b[14*8 + 7]) << 7;
+            
+            f[15] |= (unsigned char) (a[15*8 + 0] > b[15*8 + 0]) << 0;
+            f[15] |= (unsigned char) (a[15*8 + 1] > b[15*8 + 1]) << 1;
+            f[15] |= (unsigned char) (a[15*8 + 2] > b[15*8 + 2]) << 2;
+            f[15] |= (unsigned char) (a[15*8 + 3] > b[15*8 + 3]) << 3;
+            f[15] |= (unsigned char) (a[15*8 + 4] > b[15*8 + 4]) << 4;
+            f[15] |= (unsigned char) (a[15*8 + 5] > b[15*8 + 5]) << 5;
+            f[15] |= (unsigned char) (a[15*8 + 6] > b[15*8 + 6]) << 6;
+            f[15] |= (unsigned char) (a[15*8 + 7] > b[15*8 + 7]) << 7;
+            
+            f[16] |= (unsigned char) (a[16*8 + 0] > b[16*8 + 0]) << 0;
+            f[16] |= (unsigned char) (a[16*8 + 1] > b[16*8 + 1]) << 1;
+            f[16] |= (unsigned char) (a[16*8 + 2] > b[16*8 + 2]) << 2;
+            f[16] |= (unsigned char) (a[16*8 + 3] > b[16*8 + 3]) << 3;
+            f[16] |= (unsigned char) (a[16*8 + 4] > b[16*8 + 4]) << 4;
+            f[16] |= (unsigned char) (a[16*8 + 5] > b[16*8 + 5]) << 5;
+            f[16] |= (unsigned char) (a[16*8 + 6] > b[16*8 + 6]) << 6;
+            f[16] |= (unsigned char) (a[16*8 + 7] > b[16*8 + 7]) << 7;
+            
+            f[17] |= (unsigned char) (a[17*8 + 0] > b[17*8 + 0]) << 0;
+            f[17] |= (unsigned char) (a[17*8 + 1] > b[17*8 + 1]) << 1;
+            f[17] |= (unsigned char) (a[17*8 + 2] > b[17*8 + 2]) << 2;
+            f[17] |= (unsigned char) (a[17*8 + 3] > b[17*8 + 3]) << 3;
+            f[17] |= (unsigned char) (a[17*8 + 4] > b[17*8 + 4]) << 4;
+            f[17] |= (unsigned char) (a[17*8 + 5] > b[17*8 + 5]) << 5;
+            f[17] |= (unsigned char) (a[17*8 + 6] > b[17*8 + 6]) << 6;
+            f[17] |= (unsigned char) (a[17*8 + 7] > b[17*8 + 7]) << 7;
+            
+            f[18] |= (unsigned char) (a[18*8 + 0] > b[18*8 + 0]) << 0;
+            f[18] |= (unsigned char) (a[18*8 + 1] > b[18*8 + 1]) << 1;
+            f[18] |= (unsigned char) (a[18*8 + 2] > b[18*8 + 2]) << 2;
+            f[18] |= (unsigned char) (a[18*8 + 3] > b[18*8 + 3]) << 3;
+            f[18] |= (unsigned char) (a[18*8 + 4] > b[18*8 + 4]) << 4;
+            f[18] |= (unsigned char) (a[18*8 + 5] > b[18*8 + 5]) << 5;
+            f[18] |= (unsigned char) (a[18*8 + 6] > b[18*8 + 6]) << 6;
+            f[18] |= (unsigned char) (a[18*8 + 7] > b[18*8 + 7]) << 7;
+            
+            f[19] |= (unsigned char) (a[19*8 + 0] > b[19*8 + 0]) << 0;
+            f[19] |= (unsigned char) (a[19*8 + 1] > b[19*8 + 1]) << 1;
+            f[19] |= (unsigned char) (a[19*8 + 2] > b[19*8 + 2]) << 2;
+            f[19] |= (unsigned char) (a[19*8 + 3] > b[19*8 + 3]) << 3;
+            f[19] |= (unsigned char) (a[19*8 + 4] > b[19*8 + 4]) << 4;
+            f[19] |= (unsigned char) (a[19*8 + 5] > b[19*8 + 5]) << 5;
+            f[19] |= (unsigned char) (a[19*8 + 6] > b[19*8 + 6]) << 6;
+            f[19] |= (unsigned char) (a[19*8 + 7] > b[19*8 + 7]) << 7;
+            
+            f[20] |= (unsigned char) (a[20*8 + 0] > b[20*8 + 0]) << 0;
+            f[20] |= (unsigned char) (a[20*8 + 1] > b[20*8 + 1]) << 1;
+            f[20] |= (unsigned char) (a[20*8 + 2] > b[20*8 + 2]) << 2;
+            f[20] |= (unsigned char) (a[20*8 + 3] > b[20*8 + 3]) << 3;
+            f[20] |= (unsigned char) (a[20*8 + 4] > b[20*8 + 4]) << 4;
+            f[20] |= (unsigned char) (a[20*8 + 5] > b[20*8 + 5]) << 5;
+            f[20] |= (unsigned char) (a[20*8 + 6] > b[20*8 + 6]) << 6;
+            f[20] |= (unsigned char) (a[20*8 + 7] > b[20*8 + 7]) << 7;
+            
+            f[21] |= (unsigned char) (a[21*8 + 0] > b[21*8 + 0]) << 0;
+            f[21] |= (unsigned char) (a[21*8 + 1] > b[21*8 + 1]) << 1;
+            f[21] |= (unsigned char) (a[21*8 + 2] > b[21*8 + 2]) << 2;
+            f[21] |= (unsigned char) (a[21*8 + 3] > b[21*8 + 3]) << 3;
+            f[21] |= (unsigned char) (a[21*8 + 4] > b[21*8 + 4]) << 4;
+            f[21] |= (unsigned char) (a[21*8 + 5] > b[21*8 + 5]) << 5;
+            f[21] |= (unsigned char) (a[21*8 + 6] > b[21*8 + 6]) << 6;
+            f[21] |= (unsigned char) (a[21*8 + 7] > b[21*8 + 7]) << 7;
+            
+            f[22] |= (unsigned char) (a[22*8 + 0] > b[22*8 + 0]) << 0;
+            f[22] |= (unsigned char) (a[22*8 + 1] > b[22*8 + 1]) << 1;
+            f[22] |= (unsigned char) (a[22*8 + 2] > b[22*8 + 2]) << 2;
+            f[22] |= (unsigned char) (a[22*8 + 3] > b[22*8 + 3]) << 3;
+            f[22] |= (unsigned char) (a[22*8 + 4] > b[22*8 + 4]) << 4;
+            f[22] |= (unsigned char) (a[22*8 + 5] > b[22*8 + 5]) << 5;
+            f[22] |= (unsigned char) (a[22*8 + 6] > b[22*8 + 6]) << 6;
+            f[22] |= (unsigned char) (a[22*8 + 7] > b[22*8 + 7]) << 7;
+            
+            f[23] |= (unsigned char) (a[23*8 + 0] > b[23*8 + 0]) << 0;
+            f[23] |= (unsigned char) (a[23*8 + 1] > b[23*8 + 1]) << 1;
+            f[23] |= (unsigned char) (a[23*8 + 2] > b[23*8 + 2]) << 2;
+            f[23] |= (unsigned char) (a[23*8 + 3] > b[23*8 + 3]) << 3;
+            f[23] |= (unsigned char) (a[23*8 + 4] > b[23*8 + 4]) << 4;
+            f[23] |= (unsigned char) (a[23*8 + 5] > b[23*8 + 5]) << 5;
+            f[23] |= (unsigned char) (a[23*8 + 6] > b[23*8 + 6]) << 6;
+            f[23] |= (unsigned char) (a[23*8 + 7] > b[23*8 + 7]) << 7;
+            
+            f[24] |= (unsigned char) (a[24*8 + 0] > b[24*8 + 0]) << 0;
+            f[24] |= (unsigned char) (a[24*8 + 1] > b[24*8 + 1]) << 1;
+            f[24] |= (unsigned char) (a[24*8 + 2] > b[24*8 + 2]) << 2;
+            f[24] |= (unsigned char) (a[24*8 + 3] > b[24*8 + 3]) << 3;
+            f[24] |= (unsigned char) (a[24*8 + 4] > b[24*8 + 4]) << 4;
+            f[24] |= (unsigned char) (a[24*8 + 5] > b[24*8 + 5]) << 5;
+            f[24] |= (unsigned char) (a[24*8 + 6] > b[24*8 + 6]) << 6;
+            f[24] |= (unsigned char) (a[24*8 + 7] > b[24*8 + 7]) << 7;
+            
+            f[25] |= (unsigned char) (a[25*8 + 0] > b[25*8 + 0]) << 0;
+            f[25] |= (unsigned char) (a[25*8 + 1] > b[25*8 + 1]) << 1;
+            f[25] |= (unsigned char) (a[25*8 + 2] > b[25*8 + 2]) << 2;
+            f[25] |= (unsigned char) (a[25*8 + 3] > b[25*8 + 3]) << 3;
+            f[25] |= (unsigned char) (a[25*8 + 4] > b[25*8 + 4]) << 4;
+            f[25] |= (unsigned char) (a[25*8 + 5] > b[25*8 + 5]) << 5;
+            f[25] |= (unsigned char) (a[25*8 + 6] > b[25*8 + 6]) << 6;
+            f[25] |= (unsigned char) (a[25*8 + 7] > b[25*8 + 7]) << 7;
+            
+            f[26] |= (unsigned char) (a[26*8 + 0] > b[26*8 + 0]) << 0;
+            f[26] |= (unsigned char) (a[26*8 + 1] > b[26*8 + 1]) << 1;
+            f[26] |= (unsigned char) (a[26*8 + 2] > b[26*8 + 2]) << 2;
+            f[26] |= (unsigned char) (a[26*8 + 3] > b[26*8 + 3]) << 3;
+            f[26] |= (unsigned char) (a[26*8 + 4] > b[26*8 + 4]) << 4;
+            f[26] |= (unsigned char) (a[26*8 + 5] > b[26*8 + 5]) << 5;
+            f[26] |= (unsigned char) (a[26*8 + 6] > b[26*8 + 6]) << 6;
+            f[26] |= (unsigned char) (a[26*8 + 7] > b[26*8 + 7]) << 7;
+            
+            f[27] |= (unsigned char) (a[27*8 + 0] > b[27*8 + 0]) << 0;
+            f[27] |= (unsigned char) (a[27*8 + 1] > b[27*8 + 1]) << 1;
+            f[27] |= (unsigned char) (a[27*8 + 2] > b[27*8 + 2]) << 2;
+            f[27] |= (unsigned char) (a[27*8 + 3] > b[27*8 + 3]) << 3;
+            f[27] |= (unsigned char) (a[27*8 + 4] > b[27*8 + 4]) << 4;
+            f[27] |= (unsigned char) (a[27*8 + 5] > b[27*8 + 5]) << 5;
+            f[27] |= (unsigned char) (a[27*8 + 6] > b[27*8 + 6]) << 6;
+            f[27] |= (unsigned char) (a[27*8 + 7] > b[27*8 + 7]) << 7;
+            
+            f[28] |= (unsigned char) (a[28*8 + 0] > b[28*8 + 0]) << 0;
+            f[28] |= (unsigned char) (a[28*8 + 1] > b[28*8 + 1]) << 1;
+            f[28] |= (unsigned char) (a[28*8 + 2] > b[28*8 + 2]) << 2;
+            f[28] |= (unsigned char) (a[28*8 + 3] > b[28*8 + 3]) << 3;
+            f[28] |= (unsigned char) (a[28*8 + 4] > b[28*8 + 4]) << 4;
+            f[28] |= (unsigned char) (a[28*8 + 5] > b[28*8 + 5]) << 5;
+            f[28] |= (unsigned char) (a[28*8 + 6] > b[28*8 + 6]) << 6;
+            f[28] |= (unsigned char) (a[28*8 + 7] > b[28*8 + 7]) << 7;
+            
+            f[29] |= (unsigned char) (a[29*8 + 0] > b[29*8 + 0]) << 0;
+            f[29] |= (unsigned char) (a[29*8 + 1] > b[29*8 + 1]) << 1;
+            f[29] |= (unsigned char) (a[29*8 + 2] > b[29*8 + 2]) << 2;
+            f[29] |= (unsigned char) (a[29*8 + 3] > b[29*8 + 3]) << 3;
+            f[29] |= (unsigned char) (a[29*8 + 4] > b[29*8 + 4]) << 4;
+            f[29] |= (unsigned char) (a[29*8 + 5] > b[29*8 + 5]) << 5;
+            f[29] |= (unsigned char) (a[29*8 + 6] > b[29*8 + 6]) << 6;
+            f[29] |= (unsigned char) (a[29*8 + 7] > b[29*8 + 7]) << 7;
+            
+            f[30] |= (unsigned char) (a[30*8 + 0] > b[30*8 + 0]) << 0;
+            f[30] |= (unsigned char) (a[30*8 + 1] > b[30*8 + 1]) << 1;
+            f[30] |= (unsigned char) (a[30*8 + 2] > b[30*8 + 2]) << 2;
+            f[30] |= (unsigned char) (a[30*8 + 3] > b[30*8 + 3]) << 3;
+            f[30] |= (unsigned char) (a[30*8 + 4] > b[30*8 + 4]) << 4;
+            f[30] |= (unsigned char) (a[30*8 + 5] > b[30*8 + 5]) << 5;
+            f[30] |= (unsigned char) (a[30*8 + 6] > b[30*8 + 6]) << 6;
+            f[30] |= (unsigned char) (a[30*8 + 7] > b[30*8 + 7]) << 7;
+            
+            f[31] |= (unsigned char) (a[31*8 + 0] > b[31*8 + 0]) << 0;
+            f[31] |= (unsigned char) (a[31*8 + 1] > b[31*8 + 1]) << 1;
+            f[31] |= (unsigned char) (a[31*8 + 2] > b[31*8 + 2]) << 2;
+            f[31] |= (unsigned char) (a[31*8 + 3] > b[31*8 + 3]) << 3;
+            f[31] |= (unsigned char) (a[31*8 + 4] > b[31*8 + 4]) << 4;
+            f[31] |= (unsigned char) (a[31*8 + 5] > b[31*8 + 5]) << 5;
+            f[31] |= (unsigned char) (a[31*8 + 6] > b[31*8 + 6]) << 6;
+            f[31] |= (unsigned char) (a[31*8 + 7] > b[31*8 + 7]) << 7;
+            
+            
+            _mm_store_si128((__m128i*)(bd + 0*n_rows_bd),_mm_load_si128((const __m128i *)(f + 0*64)));
+            _mm_store_si128((__m128i*)(bd + 1*n_rows_bd),_mm_load_si128((const __m128i *)(f + 1*64)));
+            _mm_store_si128((__m128i*)(bd + 2*n_rows_bd),_mm_load_si128((const __m128i *)(f + 2*64)));
+            _mm_store_si128((__m128i*)(bd + 3*n_rows_bd),_mm_load_si128((const __m128i *)(f + 3*64)));
+            
+
         }
     }
 }
