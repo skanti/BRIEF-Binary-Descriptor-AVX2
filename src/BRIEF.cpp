@@ -11,10 +11,13 @@ extern "C" void kernel1(int *p_x_a, int *p_y_a, int *p_x_b, int *p_y_b,
                                int *i_x_a, int *i_y_a, int *i_x_b, int *i_y_b,
                                float cos, float sin);
 
+BRIEF::BRIEF(int n_rows_, int n_cols_)
+    : n_rows(n_rows_), n_cols(n_cols_), bd(n_rows, n_cols) {};
+
+
 void
 BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels,
-                const int stride_image, const int *x, const int *y, const float *angle, const int n_features, int64_t *bd,
-                const int n_rows_bd) {
+             const int stride_image, const int *x, const int *y, const float *angle, const int n_features) {
     for (int j = 0; j < n_features; j++) {
         if ((x[j] > diag_length_pattern) && x[j] < (width_image - diag_length_pattern)
             && (y[j] > diag_length_pattern) && y[j] < (height_image - diag_length_pattern)) {
@@ -624,10 +627,10 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
                         > *(image_center + i_y_b[8*32 + 31]*stride_image + i_x_b[8*32 + 31])) << 31;
             
             
-            _mm_store_si128((__m128i*)(bd + 0*n_rows_bd),_mm_load_si128((const __m128i *)(f + 0*64)));
-            _mm_store_si128((__m128i*)(bd + 1*n_rows_bd),_mm_load_si128((const __m128i *)(f + 1*64)));
-            _mm_store_si128((__m128i*)(bd + 2*n_rows_bd),_mm_load_si128((const __m128i *)(f + 2*64)));
-            _mm_store_si128((__m128i*)(bd + 3*n_rows_bd),_mm_load_si128((const __m128i *)(f + 3*64)));
+            _mm_store_si128((__m128i*)(bd.memptr() + 0*n_rows),_mm_load_si128((const __m128i *)(f + 0*64)));
+            _mm_store_si128((__m128i*)(bd.memptr() + 1*n_rows),_mm_load_si128((const __m128i *)(f + 1*64)));
+            _mm_store_si128((__m128i*)(bd.memptr() + 2*n_rows),_mm_load_si128((const __m128i *)(f + 2*64)));
+            _mm_store_si128((__m128i*)(bd.memptr() + 3*n_rows),_mm_load_si128((const __m128i *)(f + 3*64)));
             
 
         }

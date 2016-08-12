@@ -18,10 +18,13 @@ assert(SIZE_BITS_HAMING == 64)
 
 class BRIEF {
 public:
-    static void rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels,
-                       const int stride_image, const int *x, const int *y, const float *angle, const int n_features,
-                       int64_t *bd, const int n_rows_bd);
+    BRIEF(int n_rows_, int n_cols_);
+    void rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels,
+                          const int stride_image, const int *x, const int *y, const float *angle, const int n_features);
 
+    int n_rows;
+    int n_cols;
+    Matrix<int64_t> bd;
     static int diag_length_pattern; // <- maximal range of pattern box: 25/2 = 12, sqrt(12*12 + 12*12) = 17
     static int gaussian_bit_pattern_31_x_a[256] __attribute__((aligned(32)));
     static int gaussian_bit_pattern_31_y_a[256] __attribute__((aligned(32)));

@@ -46,9 +46,10 @@ int main() {
     double t_total = 0;
     for (int i = 0; i < n; i++) {
         cv::Mat image = cv::imread(dir + img_basenames[i], CV_LOAD_IMAGE_X);
+        BRIEF bd(4,n_features);
         Timer::start();
-        BRIEF::rbrief(image.data, HEIGHT_IMAGE, WIDTH_IMAGE, N_CHANNELS, STRIDE_IMAGE,
-                      x.data(), y.data(), angle.data(), n_features, bd.memptr(), bd.n_rows);
+        bd.rbrief(image.data, HEIGHT_IMAGE, WIDTH_IMAGE, N_CHANNELS, STRIDE_IMAGE, x.data(), y.data(), angle.data(),
+                      n_features);
         Timer::stop();
         double t = Timer::get_timing_in_ms();
         t_total += t;
