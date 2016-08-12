@@ -7,8 +7,9 @@
 #include "immintrin.h"
 
 
-
-
+extern "C" void kernel1(int *p_x_a, int *p_y_a, int *p_x_b, int *p_y_b,
+                               int *i_x_a, int *i_y_a, int *i_x_b, int *i_y_b,
+                               float cos, float sin);
 
 void
 BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels,
@@ -25,23 +26,16 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             // N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING = 4
             unsigned char a[256] __attribute__((aligned(32)));
             unsigned char b[256] __attribute__((aligned(32)));
-            int32_t x_i_a[256] __attribute__((aligned(32)));
-            int32_t y_i_a[256] __attribute__((aligned(32)));
-            int32_t x_i_b[256] __attribute__((aligned(32)));
-            int32_t y_i_b[256] __attribute__((aligned(32)));
+            int32_t i_x_a[256] __attribute__((aligned(32)));
+            int32_t i_y_a[256] __attribute__((aligned(32)));
+            int32_t i_x_b[256] __attribute__((aligned(32)));
+            int32_t i_y_b[256] __attribute__((aligned(32)));
+            kernel1(gaussian_bit_pattern_31_x_a,gaussian_bit_pattern_31_y_a,gaussian_bit_pattern_31_x_b,gaussian_bit_pattern_31_y_b,
+                i_x_a,i_y_a, i_x_b,i_y_b, cos_angle, sin_angle);
             for (int i = 0; i < 256; i++) {
-                float x_f_a = gaussian_bit_pattern_31_x_a[i]*cos_angle - gaussian_bit_pattern_31_y_a[i]*sin_angle;
-                float y_f_a = gaussian_bit_pattern_31_x_a[i]*sin_angle + gaussian_bit_pattern_31_y_a[i]*cos_angle;
-                float x_f_b = gaussian_bit_pattern_31_x_b[i]*cos_angle - gaussian_bit_pattern_31_y_b[i]*sin_angle;
-                float y_f_b = gaussian_bit_pattern_31_x_b[i]*sin_angle + gaussian_bit_pattern_31_y_b[i]*cos_angle;
-                x_i_a[i] = _mm_cvtss_si32(_mm_set_ss(x_f_a));
-                y_i_a[i] = _mm_cvtss_si32(_mm_set_ss(y_f_a));
-                x_i_b[i] = _mm_cvtss_si32(_mm_set_ss(x_f_b));
-                y_i_b[i] = _mm_cvtss_si32(_mm_set_ss(y_f_b));
-            }
-            for (int i = 0; i < 256; i++) {
-                a[i]= *(image_src_center + y_i_a[i]*stride_image + x_i_a[i]*n_channels);
-                b[i]= *(image_src_center + y_i_b[i]*stride_image + x_i_b[i]*n_channels);
+                //std::cout << i_x_a[i] << " " << i_y_a[i] << " " << i_x_b[i] << " " << i_y_b[i] << std::endl;
+                a[i]= *(image_src_center + i_y_a[i]*stride_image + i_x_a[i]*n_channels);
+                b[i]= *(image_src_center + i_y_b[i]*stride_image + i_x_b[i]*n_channels);
             }
             int32_t f[8]  __attribute__((aligned(32)));
             f[0] = _mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_load_si256((__m256i const*)(a+32*0)),_mm256_load_si256((__m256i const*) (b+32*0))));

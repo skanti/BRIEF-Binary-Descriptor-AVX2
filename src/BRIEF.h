@@ -23,10 +23,10 @@ public:
                        int64_t *bd, const int n_rows_bd);
 
     static int diag_length_pattern; // <- maximal range of pattern box: 25/2 = 12, sqrt(12*12 + 12*12) = 17
-    static int gaussian_bit_pattern_31_x_a[256];
-    static int gaussian_bit_pattern_31_y_a[256];
-    static int gaussian_bit_pattern_31_x_b[256];
-    static int gaussian_bit_pattern_31_y_b[256];
+    static int gaussian_bit_pattern_31_x_a[256] __attribute__((aligned(32)));
+    static int gaussian_bit_pattern_31_y_a[256] __attribute__((aligned(32)));
+    static int gaussian_bit_pattern_31_x_b[256] __attribute__((aligned(32)));
+    static int gaussian_bit_pattern_31_y_b[256] __attribute__((aligned(32)));
 };
 
 #endif

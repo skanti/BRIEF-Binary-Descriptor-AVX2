@@ -5,13 +5,14 @@ include(`./src/Unroll.m4')
 #include <iostream>
 #include "immintrin.h"
 
-define(intx_t,`ifelse(SIZE_BITS_HAMING,32, int32_t, int64_t)')
 define(intx_suffix,`ifelse(SIZE_BITS_HAMING,32,,L)')
-define(popcount_x,`ifelse(SIZE_BITS_HAMING,32,_popcnt32,_popcnt64)')
+extern "C" void kernel1(int *p_x_a, int *p_y_a, int *p_x_b, int *p_y_b,
+                               int *i_x_a, int *i_y_a, int *i_x_b, int *i_y_b,
+                               float cos, float sin);
 
 void
 BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels,
-                const int stride_image, const int *x, const int *y, const float *angle, const int n_features, intx_t *bd,
+                const int stride_image, const int *x, const int *y, const float *angle, const int n_features, int64_t *bd,
                 const int n_rows_bd) {
     for (int j = 0; j < n_features; j++) {
         if ((x[j] > diag_length_pattern) && x[j] < (width_image - diag_length_pattern)
@@ -24,23 +25,15 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             // `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING' = eval( N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING)
             unsigned char a[256] __attribute__((aligned(32)));
             unsigned char b[256] __attribute__((aligned(32)));
-            int32_t x_i_a[256] __attribute__((aligned(32)));
-            int32_t y_i_a[256] __attribute__((aligned(32)));
-            int32_t x_i_b[256] __attribute__((aligned(32)));
-            int32_t y_i_b[256] __attribute__((aligned(32)));
+            int32_t i_x_a[256] __attribute__((aligned(32)));
+            int32_t i_y_a[256] __attribute__((aligned(32)));
+            int32_t i_x_b[256] __attribute__((aligned(32)));
+            int32_t i_y_b[256] __attribute__((aligned(32)));
+            kernel1(gaussian_bit_pattern_31_x_a,gaussian_bit_pattern_31_y_a,gaussian_bit_pattern_31_x_b,gaussian_bit_pattern_31_y_b,
+                i_x_a,i_y_a, i_x_b,i_y_b, cos_angle, sin_angle);
             for (int i = 0; i < 256; i++) {
-                float x_f_a = gaussian_bit_pattern_31_x_a[i]*cos_angle - gaussian_bit_pattern_31_y_a[i]*sin_angle;
-                float y_f_a = gaussian_bit_pattern_31_x_a[i]*sin_angle + gaussian_bit_pattern_31_y_a[i]*cos_angle;
-                float x_f_b = gaussian_bit_pattern_31_x_b[i]*cos_angle - gaussian_bit_pattern_31_y_b[i]*sin_angle;
-                float y_f_b = gaussian_bit_pattern_31_x_b[i]*sin_angle + gaussian_bit_pattern_31_y_b[i]*cos_angle;
-                x_i_a[i] = _mm_cvtss_si32(_mm_set_ss(x_f_a));
-                y_i_a[i] = _mm_cvtss_si32(_mm_set_ss(y_f_a));
-                x_i_b[i] = _mm_cvtss_si32(_mm_set_ss(x_f_b));
-                y_i_b[i] = _mm_cvtss_si32(_mm_set_ss(y_f_b));
-            }
-            for (int i = 0; i < 256; i++) {
-                a[i]= *(image_src_center + y_i_a[i]*stride_image + x_i_a[i]*n_channels);
-                b[i]= *(image_src_center + y_i_b[i]*stride_image + x_i_b[i]*n_channels);
+                a[i]= *(image_src_center + i_y_a[i]*stride_image + i_x_a[i]*n_channels);
+                b[i]= *(image_src_center + i_y_b[i]*stride_image + i_x_b[i]*n_channels);
             }
             int32_t f[8]  __attribute__((aligned(32)));
             forloop(l,0,7,
