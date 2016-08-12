@@ -48,8 +48,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
                         > *(image_center + i_y_b[k*32 + l]*stride_image + i_x_b[k*32 + l])) << l;
             )'
             )
-            forloop(k,0,3,
-            _mm_store_si128((__m128i*)(bd.memptr() + k*n_rows),_mm_load_si128((const __m128i *)(f + k*64)));
+            forloop(k,0,1,
+            _mm_store_si128((__m128i*)(bd.memptr() + j*n_rows + k*2),_mm_load_si128((const __m128i *)(f + k*4)));
             )
 
         }

@@ -627,10 +627,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
                         > *(image_center + i_y_b[8*32 + 31]*stride_image + i_x_b[8*32 + 31])) << 31;
             
             
-            _mm_store_si128((__m128i*)(bd.memptr() + 0*n_rows),_mm_load_si128((const __m128i *)(f + 0*64)));
-            _mm_store_si128((__m128i*)(bd.memptr() + 1*n_rows),_mm_load_si128((const __m128i *)(f + 1*64)));
-            _mm_store_si128((__m128i*)(bd.memptr() + 2*n_rows),_mm_load_si128((const __m128i *)(f + 2*64)));
-            _mm_store_si128((__m128i*)(bd.memptr() + 3*n_rows),_mm_load_si128((const __m128i *)(f + 3*64)));
+            _mm_store_si128((__m128i*)(bd.memptr() + j*n_rows + 0*2),_mm_load_si128((const __m128i *)(f + 0*4)));
+            _mm_store_si128((__m128i*)(bd.memptr() + j*n_rows + 1*2),_mm_load_si128((const __m128i *)(f + 1*4)));
             
 
         }
