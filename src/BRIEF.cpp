@@ -41,8 +41,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             }
 
             int32_t f[8] __attribute__((aligned(32)));
-            f[0] |= (*(image_center + i_y_a[0*32 + 0]*stride_image + i_x_a[0*32 + 0])
-                        > *(image_center + i_y_b[0*32 + 0]*stride_image + i_x_b[0*32 + 0])) << 0;
+            f[0] = (*(image_center + i_y_a[0*32]*stride_image + i_x_a[0*32])
+                        > *(image_center + i_y_b[0*32]*stride_image + i_x_b[0*32]));
             f[0] |= (*(image_center + i_y_a[0*32 + 1]*stride_image + i_x_a[0*32 + 1])
                         > *(image_center + i_y_b[0*32 + 1]*stride_image + i_x_b[0*32 + 1])) << 1;
             f[0] |= (*(image_center + i_y_a[0*32 + 2]*stride_image + i_x_a[0*32 + 2])
@@ -106,8 +106,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             f[0] |= (*(image_center + i_y_a[0*32 + 31]*stride_image + i_x_a[0*32 + 31])
                         > *(image_center + i_y_b[0*32 + 31]*stride_image + i_x_b[0*32 + 31])) << 31;
             
-            f[1] |= (*(image_center + i_y_a[1*32 + 0]*stride_image + i_x_a[1*32 + 0])
-                        > *(image_center + i_y_b[1*32 + 0]*stride_image + i_x_b[1*32 + 0])) << 0;
+            f[1] = (*(image_center + i_y_a[1*32]*stride_image + i_x_a[1*32])
+                        > *(image_center + i_y_b[1*32]*stride_image + i_x_b[1*32]));
             f[1] |= (*(image_center + i_y_a[1*32 + 1]*stride_image + i_x_a[1*32 + 1])
                         > *(image_center + i_y_b[1*32 + 1]*stride_image + i_x_b[1*32 + 1])) << 1;
             f[1] |= (*(image_center + i_y_a[1*32 + 2]*stride_image + i_x_a[1*32 + 2])
@@ -171,8 +171,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             f[1] |= (*(image_center + i_y_a[1*32 + 31]*stride_image + i_x_a[1*32 + 31])
                         > *(image_center + i_y_b[1*32 + 31]*stride_image + i_x_b[1*32 + 31])) << 31;
             
-            f[2] |= (*(image_center + i_y_a[2*32 + 0]*stride_image + i_x_a[2*32 + 0])
-                        > *(image_center + i_y_b[2*32 + 0]*stride_image + i_x_b[2*32 + 0])) << 0;
+            f[2] = (*(image_center + i_y_a[2*32]*stride_image + i_x_a[2*32])
+                        > *(image_center + i_y_b[2*32]*stride_image + i_x_b[2*32]));
             f[2] |= (*(image_center + i_y_a[2*32 + 1]*stride_image + i_x_a[2*32 + 1])
                         > *(image_center + i_y_b[2*32 + 1]*stride_image + i_x_b[2*32 + 1])) << 1;
             f[2] |= (*(image_center + i_y_a[2*32 + 2]*stride_image + i_x_a[2*32 + 2])
@@ -236,8 +236,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             f[2] |= (*(image_center + i_y_a[2*32 + 31]*stride_image + i_x_a[2*32 + 31])
                         > *(image_center + i_y_b[2*32 + 31]*stride_image + i_x_b[2*32 + 31])) << 31;
             
-            f[3] |= (*(image_center + i_y_a[3*32 + 0]*stride_image + i_x_a[3*32 + 0])
-                        > *(image_center + i_y_b[3*32 + 0]*stride_image + i_x_b[3*32 + 0])) << 0;
+            f[3] = (*(image_center + i_y_a[3*32]*stride_image + i_x_a[3*32])
+                        > *(image_center + i_y_b[3*32]*stride_image + i_x_b[3*32]));
             f[3] |= (*(image_center + i_y_a[3*32 + 1]*stride_image + i_x_a[3*32 + 1])
                         > *(image_center + i_y_b[3*32 + 1]*stride_image + i_x_b[3*32 + 1])) << 1;
             f[3] |= (*(image_center + i_y_a[3*32 + 2]*stride_image + i_x_a[3*32 + 2])
@@ -301,8 +301,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             f[3] |= (*(image_center + i_y_a[3*32 + 31]*stride_image + i_x_a[3*32 + 31])
                         > *(image_center + i_y_b[3*32 + 31]*stride_image + i_x_b[3*32 + 31])) << 31;
             
-            f[4] |= (*(image_center + i_y_a[4*32 + 0]*stride_image + i_x_a[4*32 + 0])
-                        > *(image_center + i_y_b[4*32 + 0]*stride_image + i_x_b[4*32 + 0])) << 0;
+            f[4] = (*(image_center + i_y_a[4*32]*stride_image + i_x_a[4*32])
+                        > *(image_center + i_y_b[4*32]*stride_image + i_x_b[4*32]));
             f[4] |= (*(image_center + i_y_a[4*32 + 1]*stride_image + i_x_a[4*32 + 1])
                         > *(image_center + i_y_b[4*32 + 1]*stride_image + i_x_b[4*32 + 1])) << 1;
             f[4] |= (*(image_center + i_y_a[4*32 + 2]*stride_image + i_x_a[4*32 + 2])
@@ -366,8 +366,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             f[4] |= (*(image_center + i_y_a[4*32 + 31]*stride_image + i_x_a[4*32 + 31])
                         > *(image_center + i_y_b[4*32 + 31]*stride_image + i_x_b[4*32 + 31])) << 31;
             
-            f[5] |= (*(image_center + i_y_a[5*32 + 0]*stride_image + i_x_a[5*32 + 0])
-                        > *(image_center + i_y_b[5*32 + 0]*stride_image + i_x_b[5*32 + 0])) << 0;
+            f[5] = (*(image_center + i_y_a[5*32]*stride_image + i_x_a[5*32])
+                        > *(image_center + i_y_b[5*32]*stride_image + i_x_b[5*32]));
             f[5] |= (*(image_center + i_y_a[5*32 + 1]*stride_image + i_x_a[5*32 + 1])
                         > *(image_center + i_y_b[5*32 + 1]*stride_image + i_x_b[5*32 + 1])) << 1;
             f[5] |= (*(image_center + i_y_a[5*32 + 2]*stride_image + i_x_a[5*32 + 2])
@@ -431,8 +431,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             f[5] |= (*(image_center + i_y_a[5*32 + 31]*stride_image + i_x_a[5*32 + 31])
                         > *(image_center + i_y_b[5*32 + 31]*stride_image + i_x_b[5*32 + 31])) << 31;
             
-            f[6] |= (*(image_center + i_y_a[6*32 + 0]*stride_image + i_x_a[6*32 + 0])
-                        > *(image_center + i_y_b[6*32 + 0]*stride_image + i_x_b[6*32 + 0])) << 0;
+            f[6] = (*(image_center + i_y_a[6*32]*stride_image + i_x_a[6*32])
+                        > *(image_center + i_y_b[6*32]*stride_image + i_x_b[6*32]));
             f[6] |= (*(image_center + i_y_a[6*32 + 1]*stride_image + i_x_a[6*32 + 1])
                         > *(image_center + i_y_b[6*32 + 1]*stride_image + i_x_b[6*32 + 1])) << 1;
             f[6] |= (*(image_center + i_y_a[6*32 + 2]*stride_image + i_x_a[6*32 + 2])
@@ -496,8 +496,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             f[6] |= (*(image_center + i_y_a[6*32 + 31]*stride_image + i_x_a[6*32 + 31])
                         > *(image_center + i_y_b[6*32 + 31]*stride_image + i_x_b[6*32 + 31])) << 31;
             
-            f[7] |= (*(image_center + i_y_a[7*32 + 0]*stride_image + i_x_a[7*32 + 0])
-                        > *(image_center + i_y_b[7*32 + 0]*stride_image + i_x_b[7*32 + 0])) << 0;
+            f[7] = (*(image_center + i_y_a[7*32]*stride_image + i_x_a[7*32])
+                        > *(image_center + i_y_b[7*32]*stride_image + i_x_b[7*32]));
             f[7] |= (*(image_center + i_y_a[7*32 + 1]*stride_image + i_x_a[7*32 + 1])
                         > *(image_center + i_y_b[7*32 + 1]*stride_image + i_x_b[7*32 + 1])) << 1;
             f[7] |= (*(image_center + i_y_a[7*32 + 2]*stride_image + i_x_a[7*32 + 2])
@@ -561,8 +561,8 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             f[7] |= (*(image_center + i_y_a[7*32 + 31]*stride_image + i_x_a[7*32 + 31])
                         > *(image_center + i_y_b[7*32 + 31]*stride_image + i_x_b[7*32 + 31])) << 31;
             
-            f[8] |= (*(image_center + i_y_a[8*32 + 0]*stride_image + i_x_a[8*32 + 0])
-                        > *(image_center + i_y_b[8*32 + 0]*stride_image + i_x_b[8*32 + 0])) << 0;
+            f[8] = (*(image_center + i_y_a[8*32]*stride_image + i_x_a[8*32])
+                        > *(image_center + i_y_b[8*32]*stride_image + i_x_b[8*32]));
             f[8] |= (*(image_center + i_y_a[8*32 + 1]*stride_image + i_x_a[8*32 + 1])
                         > *(image_center + i_y_b[8*32 + 1]*stride_image + i_x_b[8*32 + 1])) << 1;
             f[8] |= (*(image_center + i_y_a[8*32 + 2]*stride_image + i_x_a[8*32 + 2])

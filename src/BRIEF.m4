@@ -41,7 +41,9 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
 
             int32_t f[8] __attribute__((aligned(32)));
             forloop(k,0,8,
-            `forloop(l,0,31,
+            f[k] = (*(image_center + i_y_a[k*32]*stride_image + i_x_a[k*32])
+                        > *(image_center + i_y_b[k*32]*stride_image + i_x_b[k*32]));
+            `forloop(l,1,31,
             f[k] |= (*(image_center + i_y_a[k*32 + l]*stride_image + i_x_a[k*32 + l])
                         > *(image_center + i_y_b[k*32 + l]*stride_image + i_x_b[k*32 + l])) << l;
             )'
