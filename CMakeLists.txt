@@ -38,7 +38,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.cpp
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/build/MathKernels.o
         PRE_BUILD
-        COMMAND ispc -O2 --arch=x86-64 --target=avx2 --opt=fast-math ${CMAKE_CURRENT_SOURCE_DIR}/src/MathKernels.ispc -o $@
+        COMMAND ispc -O2 --arch=x86-64 --target=avx2 --math-lib=fast ${CMAKE_CURRENT_SOURCE_DIR}/src/MathKernels.ispc -o $@
         MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/src/MathKernels.ispc
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Compiling ISPC files.")
