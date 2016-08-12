@@ -21,7 +21,7 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             float sin_angle = std::sin(angle[j]);
             float tri0[4]  __attribute__((aligned(32))) = {cos_angle, sin_angle, cos_angle, sin_angle};
             float tri1[4]  __attribute__((aligned(32))) = {sin_angle,cos_angle, sin_angle, cos_angle};
-            unsigned char *image_src_center = image_src + y[j] * stride_image + x[j] * n_channels;
+            unsigned char *image_center = image_src + y[j] * stride_image + x[j] * n_channels;
             // `N_DIM_BINARYDESCRIPTOR' / `SIZE_BITS_HAMING' = eval( N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING)
             unsigned char a[256] __attribute__((aligned(32)));
             unsigned char b[256] __attribute__((aligned(32)));
@@ -32,7 +32,7 @@ BRIEF::rbrief(unsigned char *image_src, const int height_image, const int width_
             kernel1(gaussian_bit_pattern_31_x_a,gaussian_bit_pattern_31_y_a,gaussian_bit_pattern_31_x_b,gaussian_bit_pattern_31_y_b,
                 i_x_a,i_y_a, i_x_b,i_y_b, cos_angle, sin_angle);
             forloop(i,0, 255,
-                a[i]= *(image_src_center + i_y_a[i]*stride_image + i_x_a[i]*n_channels); b[i]= *(image_src_center + i_y_b[i]*stride_image + i_x_b[i]*n_channels);
+                a[i]= *(image_center + i_y_a[i]*stride_image + i_x_a[i]*n_channels); b[i]= *(image_center + i_y_b[i]*stride_image + i_x_b[i]*n_channels);
             )
             int32_t f[8]  __attribute__((aligned(32)));
             forloop(l,0,7,
