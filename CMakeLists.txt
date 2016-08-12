@@ -26,11 +26,11 @@ add_library(BRIEF ${SOURCE_FILES_CPP} ${SOURCE_FILES_H})
 add_executable(BRIEFExample example/main.cpp example/Timer.h)
 target_link_libraries(BRIEFExample BRIEF opencv_core opencv_imgcodecs opencv_highgui)
 
-add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.cpp
+add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.h
         PRE_BUILD
         COMMAND m4 -DSIZE_BITS_HAMING=64 -DN_DIM_BINARYDESCRIPTOR=256 ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.m4 > $@
         MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.m4
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Creating file from m4.")
 
-set_source_files_properties(src/BRIEF.cpp PROPERTIES GENERATED true)
+set_source_files_properties(src/BRIEF.h PROPERTIES GENERATED true)
