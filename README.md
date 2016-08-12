@@ -25,6 +25,7 @@ mostly packed avx2 instructions.
 
 ## Dependencies
 - m4 (macro pre-processor)
+- Intel ispc SIMD compiler
 
 ## How-To Install
 Have a look at the CMake file. Just run it with your individual paths.
