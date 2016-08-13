@@ -34,7 +34,6 @@ void rbrief(unsigned char *image_src, const int height_image, const int width_im
             float cos_angle = std::cos(AoS[j].angle);
             float sin_angle = std::sin(AoS[j].angle);
             unsigned char *image_center = image_src + AoS[j].y * stride_image + AoS[j].x * n_channels;
-
             // N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING = 4
             int32_t i_x_a[256] __attribute__((aligned(32)));
             int32_t i_y_a[256] __attribute__((aligned(32)));
@@ -321,40 +320,6 @@ void rbrief(unsigned char *image_src, const int height_image, const int width_im
             f[7] |= (*(image_center + i_y_a[7*32 + 29]*stride_image + i_x_a[7*32 + 29]) < *(image_center + i_y_b[7*32 + 29]*stride_image + i_x_b[7*32 + 29])) << 29;
             f[7] |= (*(image_center + i_y_a[7*32 + 30]*stride_image + i_x_a[7*32 + 30]) < *(image_center + i_y_b[7*32 + 30]*stride_image + i_x_b[7*32 + 30])) << 30;
             f[7] |= (*(image_center + i_y_a[7*32 + 31]*stride_image + i_x_a[7*32 + 31]) < *(image_center + i_y_b[7*32 + 31]*stride_image + i_x_b[7*32 + 31])) << 31;
-            
-            f[8] = (*(image_center + i_y_a[8*32]*stride_image + i_x_a[8*32])
-                        < *(image_center + i_y_b[8*32]*stride_image + i_x_b[8*32]));
-            f[8] |= (*(image_center + i_y_a[8*32 + 1]*stride_image + i_x_a[8*32 + 1]) < *(image_center + i_y_b[8*32 + 1]*stride_image + i_x_b[8*32 + 1])) << 1;
-            f[8] |= (*(image_center + i_y_a[8*32 + 2]*stride_image + i_x_a[8*32 + 2]) < *(image_center + i_y_b[8*32 + 2]*stride_image + i_x_b[8*32 + 2])) << 2;
-            f[8] |= (*(image_center + i_y_a[8*32 + 3]*stride_image + i_x_a[8*32 + 3]) < *(image_center + i_y_b[8*32 + 3]*stride_image + i_x_b[8*32 + 3])) << 3;
-            f[8] |= (*(image_center + i_y_a[8*32 + 4]*stride_image + i_x_a[8*32 + 4]) < *(image_center + i_y_b[8*32 + 4]*stride_image + i_x_b[8*32 + 4])) << 4;
-            f[8] |= (*(image_center + i_y_a[8*32 + 5]*stride_image + i_x_a[8*32 + 5]) < *(image_center + i_y_b[8*32 + 5]*stride_image + i_x_b[8*32 + 5])) << 5;
-            f[8] |= (*(image_center + i_y_a[8*32 + 6]*stride_image + i_x_a[8*32 + 6]) < *(image_center + i_y_b[8*32 + 6]*stride_image + i_x_b[8*32 + 6])) << 6;
-            f[8] |= (*(image_center + i_y_a[8*32 + 7]*stride_image + i_x_a[8*32 + 7]) < *(image_center + i_y_b[8*32 + 7]*stride_image + i_x_b[8*32 + 7])) << 7;
-            f[8] |= (*(image_center + i_y_a[8*32 + 8]*stride_image + i_x_a[8*32 + 8]) < *(image_center + i_y_b[8*32 + 8]*stride_image + i_x_b[8*32 + 8])) << 8;
-            f[8] |= (*(image_center + i_y_a[8*32 + 9]*stride_image + i_x_a[8*32 + 9]) < *(image_center + i_y_b[8*32 + 9]*stride_image + i_x_b[8*32 + 9])) << 9;
-            f[8] |= (*(image_center + i_y_a[8*32 + 10]*stride_image + i_x_a[8*32 + 10]) < *(image_center + i_y_b[8*32 + 10]*stride_image + i_x_b[8*32 + 10])) << 10;
-            f[8] |= (*(image_center + i_y_a[8*32 + 11]*stride_image + i_x_a[8*32 + 11]) < *(image_center + i_y_b[8*32 + 11]*stride_image + i_x_b[8*32 + 11])) << 11;
-            f[8] |= (*(image_center + i_y_a[8*32 + 12]*stride_image + i_x_a[8*32 + 12]) < *(image_center + i_y_b[8*32 + 12]*stride_image + i_x_b[8*32 + 12])) << 12;
-            f[8] |= (*(image_center + i_y_a[8*32 + 13]*stride_image + i_x_a[8*32 + 13]) < *(image_center + i_y_b[8*32 + 13]*stride_image + i_x_b[8*32 + 13])) << 13;
-            f[8] |= (*(image_center + i_y_a[8*32 + 14]*stride_image + i_x_a[8*32 + 14]) < *(image_center + i_y_b[8*32 + 14]*stride_image + i_x_b[8*32 + 14])) << 14;
-            f[8] |= (*(image_center + i_y_a[8*32 + 15]*stride_image + i_x_a[8*32 + 15]) < *(image_center + i_y_b[8*32 + 15]*stride_image + i_x_b[8*32 + 15])) << 15;
-            f[8] |= (*(image_center + i_y_a[8*32 + 16]*stride_image + i_x_a[8*32 + 16]) < *(image_center + i_y_b[8*32 + 16]*stride_image + i_x_b[8*32 + 16])) << 16;
-            f[8] |= (*(image_center + i_y_a[8*32 + 17]*stride_image + i_x_a[8*32 + 17]) < *(image_center + i_y_b[8*32 + 17]*stride_image + i_x_b[8*32 + 17])) << 17;
-            f[8] |= (*(image_center + i_y_a[8*32 + 18]*stride_image + i_x_a[8*32 + 18]) < *(image_center + i_y_b[8*32 + 18]*stride_image + i_x_b[8*32 + 18])) << 18;
-            f[8] |= (*(image_center + i_y_a[8*32 + 19]*stride_image + i_x_a[8*32 + 19]) < *(image_center + i_y_b[8*32 + 19]*stride_image + i_x_b[8*32 + 19])) << 19;
-            f[8] |= (*(image_center + i_y_a[8*32 + 20]*stride_image + i_x_a[8*32 + 20]) < *(image_center + i_y_b[8*32 + 20]*stride_image + i_x_b[8*32 + 20])) << 20;
-            f[8] |= (*(image_center + i_y_a[8*32 + 21]*stride_image + i_x_a[8*32 + 21]) < *(image_center + i_y_b[8*32 + 21]*stride_image + i_x_b[8*32 + 21])) << 21;
-            f[8] |= (*(image_center + i_y_a[8*32 + 22]*stride_image + i_x_a[8*32 + 22]) < *(image_center + i_y_b[8*32 + 22]*stride_image + i_x_b[8*32 + 22])) << 22;
-            f[8] |= (*(image_center + i_y_a[8*32 + 23]*stride_image + i_x_a[8*32 + 23]) < *(image_center + i_y_b[8*32 + 23]*stride_image + i_x_b[8*32 + 23])) << 23;
-            f[8] |= (*(image_center + i_y_a[8*32 + 24]*stride_image + i_x_a[8*32 + 24]) < *(image_center + i_y_b[8*32 + 24]*stride_image + i_x_b[8*32 + 24])) << 24;
-            f[8] |= (*(image_center + i_y_a[8*32 + 25]*stride_image + i_x_a[8*32 + 25]) < *(image_center + i_y_b[8*32 + 25]*stride_image + i_x_b[8*32 + 25])) << 25;
-            f[8] |= (*(image_center + i_y_a[8*32 + 26]*stride_image + i_x_a[8*32 + 26]) < *(image_center + i_y_b[8*32 + 26]*stride_image + i_x_b[8*32 + 26])) << 26;
-            f[8] |= (*(image_center + i_y_a[8*32 + 27]*stride_image + i_x_a[8*32 + 27]) < *(image_center + i_y_b[8*32 + 27]*stride_image + i_x_b[8*32 + 27])) << 27;
-            f[8] |= (*(image_center + i_y_a[8*32 + 28]*stride_image + i_x_a[8*32 + 28]) < *(image_center + i_y_b[8*32 + 28]*stride_image + i_x_b[8*32 + 28])) << 28;
-            f[8] |= (*(image_center + i_y_a[8*32 + 29]*stride_image + i_x_a[8*32 + 29]) < *(image_center + i_y_b[8*32 + 29]*stride_image + i_x_b[8*32 + 29])) << 29;
-            f[8] |= (*(image_center + i_y_a[8*32 + 30]*stride_image + i_x_a[8*32 + 30]) < *(image_center + i_y_b[8*32 + 30]*stride_image + i_x_b[8*32 + 30])) << 30;
-            f[8] |= (*(image_center + i_y_a[8*32 + 31]*stride_image + i_x_a[8*32 + 31]) < *(image_center + i_y_b[8*32 + 31]*stride_image + i_x_b[8*32 + 31])) << 31;
             
             
             _mm_store_si128((__m128i*)(bd.memptr() + j*n_rows + 0*2),_mm_load_si128((const __m128i *)(f + 0*4)));
