@@ -54,7 +54,7 @@ int main() {
         double t = Timer::get_timing_in_ms();
         t_total += t;
         std::cout << "timing (ms): " << t << std::endl;
-        std::cout << std::bitset<64>(bd.bd(0, 0)).to_string() << std::endl;
+        std::cout << std::bitset<64>(bd.bd(0, 0)).to_string() << " " << std::bitset<64>(bd.bd(1, 0)).to_string() << std::endl;
     }
     std::cout << "timing average(ms): " << t_total / n << std::endl;
 }

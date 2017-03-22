@@ -18,6 +18,8 @@ assert(`N_DIM_BINARYDESCRIPTOR' == 256)
 assert(`SIZE_BITS_HAMING' == 64)
 #endif
 
+#define ROUND(value) _mm_cvtsd_si32(_mm_set_sd(value))
+
 class BRIEF {
 public:
     BRIEF(int n_rows_, int n_cols_);
@@ -38,10 +40,10 @@ void rbrief(unsigned char *image_src, const int height_image, const int width_im
             alignas(32) int32_t ib_y[256];
 
             for (int i = 0 ; i< 256; i++)  {
-                ia_x[i] = (int)(gaussian_bit_pattern_31_x_a[i]*cos_angle - gaussian_bit_pattern_31_y_a[i]*sin_angle);
-                ia_y[i] = (int)(gaussian_bit_pattern_31_x_a[i]*sin_angle + gaussian_bit_pattern_31_y_a[i]*cos_angle);
-                ib_x[i] = (int)(gaussian_bit_pattern_31_x_b[i]*cos_angle - gaussian_bit_pattern_31_y_b[i]*sin_angle);
-                ib_y[i] = (int)(gaussian_bit_pattern_31_x_b[i]*sin_angle + gaussian_bit_pattern_31_y_b[i]*cos_angle);
+                ia_x[i] = ROUND((gaussian_bit_pattern_31_x_a[i]*cos_angle - gaussian_bit_pattern_31_y_a[i]*sin_angle));
+                ia_y[i] = ROUND((gaussian_bit_pattern_31_x_a[i]*sin_angle + gaussian_bit_pattern_31_y_a[i]*cos_angle));
+                ib_x[i] = ROUND((gaussian_bit_pattern_31_x_b[i]*cos_angle - gaussian_bit_pattern_31_y_b[i]*sin_angle));
+                ib_y[i] = ROUND((gaussian_bit_pattern_31_x_b[i]*sin_angle + gaussian_bit_pattern_31_y_b[i]*cos_angle));
             }
 
 #define GET_VALUE(i, j) (*(image_center + ia_y[i*32 + j]*stride_image + ia_x[i*32 + j]) < *(image_center + ib_y[i*32 + j]*stride_image + ib_x[i*32 + j])) << j
@@ -50,7 +52,7 @@ void rbrief(unsigned char *image_src, const int height_image, const int width_im
             
             forloop(k,0,7,
             `forloop(l,0,31,
-            f[k] |= GET_VALUE(k, l);
+            f[k] |=  GET_VALUE(k, l);
             )'
             )
 
