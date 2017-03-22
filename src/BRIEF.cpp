@@ -1,5 +1,3 @@
-
-
 #include "Types.h"
 #include "BRIEF.h"
 

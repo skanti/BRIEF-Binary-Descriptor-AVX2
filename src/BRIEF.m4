@@ -1,6 +1,4 @@
-include(`./src/Unroll.m4')
-#ifndef BRIEF_H
-#define BRIEF_H
+include(`./src/Unroll.m4')#pragma once
 
 #include "Types.h"
 #include <cassert>
@@ -11,13 +9,13 @@ include(`./src/Unroll.m4')
 #ifndef N_DIM_BINARYDESCRIPTOR
 #define N_DIM_BINARYDESCRIPTOR 256
 #else
-assert(N_DIM_BINARYDESCRIPTOR == 256)
+assert(`N_DIM_BINARYDESCRIPTOR' == 256)
 #endif
 
 #ifndef SIZE_BITS_HAMING
 #define SIZE_BITS_HAMING 64
 #else
-assert(SIZE_BITS_HAMING == 64)
+assert(`SIZE_BITS_HAMING' == 64)
 #endif
 
 class BRIEF {
@@ -72,5 +70,3 @@ void rbrief(unsigned char *image_src, const int height_image, const int width_im
     static int gaussian_bit_pattern_31_x_b[256] __attribute__((aligned(32)));
     static int gaussian_bit_pattern_31_y_b[256] __attribute__((aligned(32)));
 };
-
-#endif

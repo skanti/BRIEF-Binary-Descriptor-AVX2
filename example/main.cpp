@@ -1,7 +1,6 @@
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/features2d.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/features2d/features2d.hpp>
 #include <iostream>
 #include <random>
 #include "BRIEF.h"
@@ -36,14 +35,12 @@ void create_synthetic_data(Corners *corners, int n_features) {
 }
 
 int main() {
-    std::string dir = "/Users/amon/grive/development/BRIEF/picdump";
-    std::vector<std::string> img_basenames = {"/apple.jpg", "/astronaut.jpg", "/bike.jpg", "/bmw.jpg",
-                                              "/cake.jpg", "/cherry.jpg", "/dreamliner.jpg", "/macbook.jpg",
-                                              "/orange.jpg"};
+    std::string dir = "/home/amon/grive/development/BRIEF/picdump";
+    std::vector<std::string> img_basenames = {"/apple.jpg", "/astronaut.jpg", "/bike.jpg", "/bmw.jpg", "/cake.jpg", "/cherry.jpg", "/dreamliner.jpg", "/macbook.jpg", "/orange.jpg"};
     int n = img_basenames.size();
 
     int n_dim_vec = N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING;
-    int n_features = 500;
+    int n_features = 1 << 16;
     std::vector<Corners> corners(n_features);
     create_synthetic_data(corners.data(), n_features);
     Matrix<int64_t> bd(n_dim_vec, n_features);

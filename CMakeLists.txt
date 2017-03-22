@@ -1,10 +1,18 @@
 cmake_minimum_required(VERSION 3.0)
 project(BRIEF CXX)
 
-set(CMAKE_CXX_COMPILER "/usr/local/bin/icpc")
-set(OPTIMIZATION_FLAGS "-O3 -qopenmp -fomit-frame-pointer -march=native -ansi-alias")
-set(USER_DEFINES "-DN_THREADS=4 -DNDEBUG")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OPTIMIZATION_FLAGS} -Wall -std=c++14 ${USER_DEFINES}")
+# -> required libraries
+find_package(OpenCV 2.4 REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+# <-
+
+# -> compiler requirements
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED 1)
+# <-
+
+set(CMAKE_CXX_COMPILER "/usr/bin/c++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-result -O3 -mavx2 -msse4 -Wall -std=c++14 -DNDEBUG")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
@@ -17,20 +25,18 @@ set(SOURCE_FILES_H
         src/Types.h)
 
 
-set(OPENCV_DIR /usr/local/Cellar/opencv3/3.1.0_3)
-
-include_directories(${OPENCV_DIR}/include ./src)
-link_directories(${OPENCV_DIR}/lib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 add_library(BRIEF ${SOURCE_FILES_CPP} ${SOURCE_FILES_H})
 
+#opencv_core opencv_imgcodecs opencv_highgui 
 add_executable(BRIEFExample example/main.cpp example/Timer.h)
-target_link_libraries(BRIEFExample BRIEF opencv_core opencv_imgcodecs opencv_highgui)
+target_link_libraries(BRIEFExample BRIEF ${OpenCV_LIBRARIES})
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.h
         PRE_BUILD
-        COMMAND m4 -DSIZE_BITS_HAMING=64 -DN_DIM_BINARYDESCRIPTOR=256 ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.m4 > $@
+        COMMAND m4 -DSIZE_BITS_HAMING=64 -DN_DIM_BINARYDESCRIPTOR=256 ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.m4 > ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.h
         MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/src/BRIEF.m4
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT "Creating file from m4.")
+        COMMENT "Creating files from m4.")
 
 set_source_files_properties(src/BRIEF.h PROPERTIES GENERATED true)

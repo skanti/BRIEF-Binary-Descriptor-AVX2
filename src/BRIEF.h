@@ -1,7 +1,5 @@
 
-
-#ifndef BRIEF_H
-#define BRIEF_H
+#pragma once
 
 #include "Types.h"
 #include <cassert>
@@ -12,13 +10,13 @@
 #ifndef N_DIM_BINARYDESCRIPTOR
 #define N_DIM_BINARYDESCRIPTOR 256
 #else
-assert(256 == 256)
+assert(N_DIM_BINARYDESCRIPTOR == 256)
 #endif
 
 #ifndef SIZE_BITS_HAMING
 #define SIZE_BITS_HAMING 64
 #else
-assert(64 == 64)
+assert(SIZE_BITS_HAMING == 64)
 #endif
 
 class BRIEF {
@@ -339,5 +337,3 @@ void rbrief(unsigned char *image_src, const int height_image, const int width_im
     static int gaussian_bit_pattern_31_x_b[256] __attribute__((aligned(32)));
     static int gaussian_bit_pattern_31_y_b[256] __attribute__((aligned(32)));
 };
-
-#endif
