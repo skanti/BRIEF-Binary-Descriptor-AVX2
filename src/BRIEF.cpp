@@ -1,9 +1,7 @@
 #include "Types.h"
 #include "BRIEF.h"
 
-extern "C" void kernel1(int *p_x_a, int *p_y_a, int *p_x_b, int *p_y_b,
-                               int *i_x_a, int *i_y_a, int *i_x_b, int *i_y_b,
-                               float cos, float sin);
+extern "C" void kernel1(int *p_x_a, int *p_y_a, int *p_x_b, int *p_y_b, int *i_x_a, int *i_y_a, int *i_x_b, int *i_y_b, float cos, float sin);
 
 BRIEF::BRIEF(int n_rows_, int n_cols_)
     : n_rows(n_rows_), n_cols(n_cols_), bd(n_rows, n_cols) {};

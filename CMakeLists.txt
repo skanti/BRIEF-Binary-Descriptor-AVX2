@@ -2,14 +2,13 @@ cmake_minimum_required(VERSION 3.0)
 project(BRIEF CXX)
 
 # -> required libraries
-find_package(OpenCV 2.4 REQUIRED)
+find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
+
+find_package(Eigen3 3.3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
 # <-
 
-# -> compiler requirements
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED 1)
-# <-
 
 set(CMAKE_CXX_COMPILER "/usr/bin/c++")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-result -O3 -mavx2 -msse4 -Wall -std=c++14 -DNDEBUG")

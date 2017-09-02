@@ -43,7 +43,7 @@ int main() {
     int n_features = 1 << 16;
     std::vector<Corners> corners(n_features);
     create_synthetic_data(corners.data(), n_features);
-    Matrix<int64_t> bd(n_dim_vec, n_features);
+    Eigen::Matrix<int64_t, -1, -1> bd(n_dim_vec, n_features);
     double t_total = 0;
     for (int i = 0; i < n; i++) {
         cv::Mat image = cv::imread(dir + img_basenames[i], CV_LOAD_IMAGE_X);
