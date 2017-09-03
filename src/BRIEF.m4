@@ -1,10 +1,11 @@
 include(`./src/Unroll.m4')#pragma once
 
-#include "Types.h"
+//#include "Types.h"
 #include <cassert>
 #include <cmath>
 #include <iostream>
 #include "immintrin.h"
+#include <Eigen/Dense>
 
 #ifndef N_DIM_BINARYDESCRIPTOR
 #define N_DIM_BINARYDESCRIPTOR 256
@@ -22,7 +23,7 @@ assert(`SIZE_BITS_HAMING' == 64)
 
 class BRIEF {
 public:
-    BRIEF(int n_rows_, int n_cols_);
+    void init(int n_rows_, int n_cols_);
 
 template<class T>
 void rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels,
@@ -57,7 +58,7 @@ void rbrief(unsigned char *image_src, const int height_image, const int width_im
             )
 
             forloop(k,0,1,
-            _mm_store_si128((__m128i*)(bd.memptr() + j*n_rows + k*2),_mm_load_si128((const __m128i *)(f + k*4)));
+            _mm_store_si128((__m128i*)(&bd(0,0) + j*n_rows + k*2),_mm_load_si128((const __m128i *)(f + k*4)));
             )
 
         }
@@ -66,10 +67,10 @@ void rbrief(unsigned char *image_src, const int height_image, const int width_im
 
     int n_rows;
     int n_cols;
-    Matrix<int64_t> bd;
+    Eigen::Matrix<int64_t, -1, -1> bd;
     static int diag_length_pattern; // <- maximal range of pattern box: 25/2 = 12, sqrt(12*12 + 12*12) = 17
-    static int gaussian_bit_pattern_31_x_a[256];
-    static int gaussian_bit_pattern_31_y_a[256];
-    static int gaussian_bit_pattern_31_x_b[256];
-    static int gaussian_bit_pattern_31_y_b[256];
+    static char gaussian_bit_pattern_31_x_a[256];
+    static char gaussian_bit_pattern_31_y_a[256];
+    static char gaussian_bit_pattern_31_x_b[256];
+    static char gaussian_bit_pattern_31_y_b[256];
 };

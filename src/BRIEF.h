@@ -1,3 +1,4 @@
+
 #pragma once
 
 //#include "Types.h"
@@ -23,10 +24,11 @@ assert(SIZE_BITS_HAMING == 64)
 
 class BRIEF {
 public:
-    BRIEF(int n_rows_, int n_cols_);
+    void init(int n_rows_, int n_cols_);
 
 template<class T>
-void rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels, const int stride_image, T *AoS, const int n_features) {
+void rbrief(unsigned char *image_src, const int height_image, const int width_image, const int n_channels,
+             const int stride_image, T *AoS, const int n_features) {
     for (int j = 0; j < n_features; j++) {
         if ((AoS[j].x > diag_length_pattern) && AoS[j].x < (width_image - diag_length_pattern)
             && (AoS[j].y > diag_length_pattern) && AoS[j].y < (height_image - diag_length_pattern)) {
@@ -316,8 +318,8 @@ void rbrief(unsigned char *image_src, const int height_image, const int width_im
             
             
 
-            _mm_store_si128((__m128i*)(&bd(0, 0) + j*n_rows + 0*2),_mm_load_si128((const __m128i *)(f + 0*4)));
-            _mm_store_si128((__m128i*)(&bd(0, 0) + j*n_rows + 1*2),_mm_load_si128((const __m128i *)(f + 1*4)));
+            _mm_store_si128((__m128i*)(&bd(0,0) + j*n_rows + 0*2),_mm_load_si128((const __m128i *)(f + 0*4)));
+            _mm_store_si128((__m128i*)(&bd(0,0) + j*n_rows + 1*2),_mm_load_si128((const __m128i *)(f + 1*4)));
             
 
         }
@@ -328,8 +330,8 @@ void rbrief(unsigned char *image_src, const int height_image, const int width_im
     int n_cols;
     Eigen::Matrix<int64_t, -1, -1> bd;
     static int diag_length_pattern; // <- maximal range of pattern box: 25/2 = 12, sqrt(12*12 + 12*12) = 17
-    static int gaussian_bit_pattern_31_x_a[256];
-    static int gaussian_bit_pattern_31_y_a[256];
-    static int gaussian_bit_pattern_31_x_b[256];
-    static int gaussian_bit_pattern_31_y_b[256];
+    static char gaussian_bit_pattern_31_x_a[256];
+    static char gaussian_bit_pattern_31_y_a[256];
+    static char gaussian_bit_pattern_31_x_b[256];
+    static char gaussian_bit_pattern_31_y_b[256];
 };
