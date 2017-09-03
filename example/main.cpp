@@ -21,16 +21,15 @@
 
 struct Corners {
     int x, y;
-    float angle;
 };
 
-void create_synthetic_data(Corners *corners, int n_features) {
+void create_synthetic_data(Corners *corners, float* angles, int n_features) {
     std::mt19937 mt(999);
     std::uniform_real_distribution<float> u_dist(0, 1);
     for (int i = 0; i < n_features; i++) {
         corners[i].x = (int) (u_dist(mt) * WIDTH_IMAGE);
         corners[i].y = (int) (u_dist(mt) * HEIGHT_IMAGE);
-        corners[i].angle = u_dist(mt) * 3.14f;
+        angles[i] = u_dist(mt) * 3.14f;
     }
 }
 
@@ -41,19 +40,20 @@ int main() {
 
     int n_features = 1 << 16;
     std::vector<Corners> corners(n_features);
-    create_synthetic_data(corners.data(), n_features);
+    std::vector<float> angles(n_features);
+    create_synthetic_data(corners.data(), angles.data(), n_features);
     double t_total = 0;
     for (int i = 0; i < n; i++) {
         cv::Mat image = cv::imread(dir + img_basenames[i], CV_LOAD_IMAGE_X);
-        BRIEF bd;
-		bd.init(4, n_features);
+        BRIEF brief;
+		brief.init(4, n_features);
         Timer::start();
-        bd.rbrief(image.data, HEIGHT_IMAGE, WIDTH_IMAGE, N_CHANNELS, STRIDE_IMAGE, corners.data(), n_features);
+        brief.compute(image.data, HEIGHT_IMAGE, WIDTH_IMAGE, N_CHANNELS, STRIDE_IMAGE,(BRIEF::Feature*) corners.data(), angles.data(), n_features);
         Timer::stop();
         double t = Timer::get_timing_in_ms();
         t_total += t;
         std::cout << "timing (ms): " << t << std::endl;
-        std::cout << std::bitset<64>(bd.bd(0, 0)).to_string() << " " << std::bitset<64>(bd.bd(1, 0)).to_string() << std::endl;
+        std::cout << std::bitset<64>(brief.bd(0, 0)).to_string() << " " << std::bitset<64>(brief.bd(1, 0)).to_string() << std::endl;
     }
     std::cout << "timing average(ms): " << t_total / n << std::endl;
 }
