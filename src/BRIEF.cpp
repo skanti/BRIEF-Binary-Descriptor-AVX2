@@ -4,7 +4,7 @@
 void BRIEF::init(int n_rows_, int n_cols_) {
     n_rows = n_rows_;
 	n_cols = n_cols_;
-	bd.resize(n_rows, n_cols);
+	bd.init(n_rows, n_cols);
 }
 
 int BRIEF::diag_length_pattern = 17;

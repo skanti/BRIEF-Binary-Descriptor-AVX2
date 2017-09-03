@@ -1,0 +1,7 @@
+# folders
+build/*
+
+# hidden files
+.*
+!.gitignore
+

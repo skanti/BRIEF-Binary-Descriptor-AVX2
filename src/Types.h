@@ -5,9 +5,15 @@
 
 template<typename T, int A = 64>
 struct Matrix {
-    Matrix(int n_rows_, int n_cols_) : n_rows(n_rows_), n_cols(n_cols_) {
+    void init(int n_rows_, int n_cols_) { 
+		n_rows = n_rows_;
+		n_cols = n_cols_;
         posix_memalign((void **) &data, A, n_rows * n_cols * sizeof(T));
     };
+	
+	Matrix() {
+		data = 0;
+	}
 
     ~Matrix() {
         free((void *) data);

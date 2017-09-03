@@ -1,12 +1,11 @@
 
 #pragma once
 
-//#include "Types.h"
 #include <cassert>
 #include <cmath>
 #include <iostream>
 #include "immintrin.h"
-#include <Eigen/Dense>
+#include "Types.h"
 
 #ifndef N_DIM_BINARYDESCRIPTOR
 #define N_DIM_BINARYDESCRIPTOR 256
@@ -333,7 +332,7 @@ public:
 
     int n_rows;
     int n_cols;
-    Eigen::Matrix<int64_t, -1, -1> bd;
+    Matrix<int64_t> bd;
     static int diag_length_pattern; // <- maximal range of pattern box: 25/2 = 12, sqrt(12*12 + 12*12) = 17
     static char gaussian_bit_pattern_31_x_a[256];
     static char gaussian_bit_pattern_31_y_a[256];
